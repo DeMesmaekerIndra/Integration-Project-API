@@ -2,7 +2,6 @@
 
 declare (strict_types = 1);
 
-use DI\container;
 use Slim\Factory\AppFactory;
 
 final class App
@@ -11,8 +10,8 @@ final class App
 
     public function getApp()
     {
-        require __DIR__ . '\\..\\..\\vendor\\autoload.php';
-        $baseDir = __DIR__ . '\\..\\..';
+        require __DIR__ . '/../../vendor/autoload.php';
+        $baseDir = __DIR__ . '/../..';
 
         $dotenv = null;
 
@@ -28,7 +27,7 @@ final class App
 
         //Loads settings based on environment
         $settings = require __DIR__ . '/Settings.php';
-        $container = new Container();
+        $container = new DI\Container();
         $container->set('settings', $settings);
 
         //Create the app
