@@ -4,7 +4,8 @@
         "slim/psr7": "^1.1",
         "php-di/php-di": "^6.1",
         "doctrine/annotations": "^1.10",
-        "opis/closure": "^3.5"
+        "opis/closure": "^3.5",
+        "vlucas/phpdotenv": "^4.1"
     },
     "autoload": {
         "psr-4": {
