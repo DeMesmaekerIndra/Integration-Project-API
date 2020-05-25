@@ -7,38 +7,41 @@ use Slim\Factory\AppFactory;
 
 final class App
 {
-    private $inDeveloppment = true;
+    private const IN_DEV = true;
+
     public function getApp()
     {
-        require __DIR__ . '/../../vendor/autoload.php';
-        $baseDir = __DIR__ . '../../';
+        require __DIR__ . '\\..\\..\\vendor\\autoload.php';
+        $baseDir = __DIR__ . '\\..\\..';
+
+        $dotenv = null;
 
         //Determine which environment file to use
-        $dotenv = new Dotenv\Dotenv($baseDir);
-        if ($inDeveloppment) {
-            if (file_exists($baseDir . '.development.env')) {
-                $dotenv->load();
-            } elseif (file_exists($baseDir . '.production.env')) {
-                $dotenv->load();
-            }
+        if (self::IN_DEV) {
+            $dotenv = Dotenv\Dotenv::createImmutable($baseDir, '.dev.env');
+            $dotenv->load();
+        } else {
+            $dotenv = Dotenv\Dotenv::createImmutable($baseDir, '.prod.env');
+            $dotenv->load();
         }
         $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
 
         //Loads settings based on environment
         $settings = require __DIR__ . '/Settings.php';
-        $container = new Container($settings);
+        $container = new Container();
+        $container->set('settings', $settings);
 
         //Create the app
         AppFactory::setContainer($container);
         $app = AppFactory::create();
 
         //Add services to the app
-        $path = getenv('SLIM_BASE_PATH') ?: '';
+        $path = $_SERVER['SLIM_BASE_PATH'] ?: '';
         $app->setBasePath($path); // Root path, routes will be relative to this
         $app->addBodyParsingMiddleware(); //Support XAML/JSON
 
         //How are errors displayed?
-        $displayError = filter_var(getenv('DISPLAY_ERROR_DETAILS'), FILTER_VALIDATE_BOOLEAN);
+        $displayError = filter_var($_SERVER['DISPLAY_ERROR_DETAILS'], FILTER_VALIDATE_BOOLEAN);
         $app->addErrorMiddleware($displayError, true, true);
 
         //Set up simple CORS Headers

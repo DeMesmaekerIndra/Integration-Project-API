@@ -5,10 +5,10 @@ declare (strict_types = 1);
 return [
     'settings' => [
         'db' => [
-            'hostname' => getenv('DB_HOST'),
-            'database' => getenv('DB_NAME'),
-            'username' => getenv('DB_USER'),
-            'password' => getenv('DB_PASS'),
+            'hostname' => $_SERVER['DB_HOST'],
+            'database' => $_SERVER['DB_NAME'],
+            'username' => $_SERVER['DB_USER'],
+            'password' => $_SERVER['DB_PASS'],
         ],
     ],
 ];
