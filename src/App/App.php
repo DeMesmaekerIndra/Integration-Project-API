@@ -58,6 +58,7 @@ final class App
         //Load required scripts
         require __DIR__ . '/Routes.php';
         require __DIR__ . '/Dependencies.php';
+        require __DIR__ . '/Repositories.php';
 
         // Catch all 404 not found
         $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response): void {
