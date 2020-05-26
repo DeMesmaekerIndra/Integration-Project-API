@@ -2,10 +2,10 @@
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.1",
-        "php-di/php-di": "^6.1",
         "doctrine/annotations": "^1.10",
         "opis/closure": "^3.5",
-        "vlucas/phpdotenv": "^4.1"
+        "vlucas/phpdotenv": "^4.1",
+        "pimple/pimple": "^3.3"
     },
     "autoload": {
         "psr-4": {

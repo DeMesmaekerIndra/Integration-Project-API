@@ -2,6 +2,8 @@
 
 declare (strict_types = 1);
 
+use Pimple\Container as PimpleContainer;
+use Pimple\Psr11\Container as Psr11Container;
 use Slim\Factory\AppFactory;
 
 final class App
@@ -27,19 +29,17 @@ final class App
 
         //Loads settings based on environment
         $settings = require __DIR__ . '/Settings.php';
-        $container = new DI\Container();
-        $container->set('settings', $settings);
+        $container = new PimpleContainer($settings);
 
         //Create the app
-        AppFactory::setContainer($container);
-        $app = AppFactory::create();
+        $app = AppFactory::create(null, new Psr11Container($container));
 
-        //Add services to the app
+        //Add services to the app & configure
         $path = $_SERVER['SLIM_BASE_PATH'] ?: '';
         $app->setBasePath($path); // Root path, routes will be relative to this
         $app->addBodyParsingMiddleware(); //Support XAML/JSON
 
-        //How are errors displayed?
+        //How are errors displayed
         $displayError = filter_var($_SERVER['DISPLAY_ERROR_DETAILS'], FILTER_VALIDATE_BOOLEAN);
         $app->addErrorMiddleware($displayError, true, true);
 
@@ -57,6 +57,7 @@ final class App
 
         //Load required scripts
         require __DIR__ . '/Routes.php';
+        require __DIR__ . '/Dependencies.php';
 
         // Catch all 404 not found
         $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response): void {

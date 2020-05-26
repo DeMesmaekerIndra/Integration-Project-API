@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use DI\container;
+use Pimple\Psr11\Container;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -20,7 +20,7 @@ final class FaseController
     public function getAll(Request $request, Response $response): Response
     {
         $message = [
-            'db info' => $this->container->get('settings'),
+            'db info' => $this->container->get('pdo'),
         ];
         $return = json_encode($message);
         $response->getBody()->write($return);
