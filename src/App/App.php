@@ -43,16 +43,14 @@ final class App
         $displayError = filter_var($_SERVER['DISPLAY_ERROR_DETAILS'], FILTER_VALIDATE_BOOLEAN);
         $app->addErrorMiddleware($displayError, true, true);
 
-        //Set up simple CORS Headers
-        $app->options('/{routes:.+}', function ($request, $response, $args) {
-            return $response;
-        });
+        //Set up headers
         $app->add(function ($request, $handler) {
             $response = $handler->handle($request);
             return $response
                 ->withHeader('Access-Control-Allow-Origin', '*')
                 ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+                ->withHeader('Content-Type', 'application/json');
         });
 
         //Load required scripts
@@ -66,6 +64,5 @@ final class App
         });
 
         return $app;
-
     }
 }

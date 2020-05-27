@@ -25,7 +25,7 @@ final class OpoController
         $message = ['data' => $result];
         $return = json_encode($message);
         $response->getBody()->write($return);
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 
     public function getWithOlas(Request $request, Response $response, $args): Response
@@ -35,7 +35,7 @@ final class OpoController
         $opo['OLAs'] = $this->olaRepository->getByOpo($id);
         $return = ['data' => $opo];
         $response->getBody()->write(json_encode($return));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 
     public function getAll(Request $request, Response $response, $args): Response
@@ -44,7 +44,7 @@ final class OpoController
         $message = ['data' => $result];
         $return = json_encode($message);
         $response->getBody()->write($return);
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 
     public function getAllWithOlas(Request $request, Response $response, $args): Response
@@ -59,7 +59,7 @@ final class OpoController
         }
 
         $response->getBody()->write(json_encode($return));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 
     public function create(Request $request, Response $response): Response
@@ -70,13 +70,13 @@ final class OpoController
         if (!$result) {
             $return = array('Message:' => 'Row was not created');
             $response->getBody()->write(json_encode($return));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            return $response->withStatus(400);
         }
 
         $return = array('Message:' => 'Row was created');
         $response->getBody()->write(json_encode($return));
 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 
     public function update(Request $request, Response $response, $args): Response
@@ -87,13 +87,13 @@ final class OpoController
         if (!$result) {
             $return = array('Message:' => 'Row was not updated');
             $response->getBody()->write(json_encode($return));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            return $response->withStatus(400);
         }
 
         $return = array('Message:' => 'Row was updated');
         $response->getBody()->write(json_encode($return));
 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 
     public function delete(Request $request, Response $response, $args): Response
@@ -103,13 +103,13 @@ final class OpoController
         if (!$result) {
             $return = array('Message:' => 'Row was not deleted');
             $response->getBody()->write(json_encode($return));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            return $response->withStatus(400);
         }
 
         $return = array('Message:' => 'Row was deleted');
         $response->getBody()->write(json_encode($return));
 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 
 }

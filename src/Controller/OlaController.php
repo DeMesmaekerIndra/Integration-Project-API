@@ -26,13 +26,13 @@ final class OlaController
         if (!$result) {
             $return = array('Message:' => 'Row was not created');
             $response->getBody()->write(json_encode($return));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            return $response->withStatus(400);
         }
 
         $return = array('Message:' => 'Row was created', "data" => ["Id" => $result]);
         $response->getBody()->write(json_encode($return));
 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 
     public function getAll(Request $request, Response $response, $args): Response
@@ -41,6 +41,6 @@ final class OlaController
         $message = ['data' => $result];
         $return = json_encode($message);
         $response->getBody()->write($return);
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withStatus(200);
     }
 }
