@@ -37,6 +37,23 @@ final class OpoController
         $return = json_encode($message);
         $response->getBody()->write($return);
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+    }
 
+    public function create(Request $request, Response $response): Response
+    {
+        $newOpo = $request->getParsedBody();
+        
+
+        $response->getBody()->write('Made it to create method');
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+
+    }
+
+    public function update(Request $request, Response $response): Response
+    {
+        $newOpo = $request->getParsedBody();
+
+        $response->getBody()->write('Made it to update method');
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }

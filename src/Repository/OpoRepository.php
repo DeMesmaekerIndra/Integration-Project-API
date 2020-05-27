@@ -29,4 +29,9 @@ final class OpoRepository
         $query->execute();
         return $query->fetchAll();
     }
+
+    public function create($newOpo)
+    {
+        
+    }
 }
