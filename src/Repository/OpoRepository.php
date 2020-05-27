@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 
 final class OpoRepository
 {
-    private $container;
+    private $connection;
 
     public function __construct(ContainerInterface $container)
     {
@@ -19,7 +19,7 @@ final class OpoRepository
         $stmt = $this->connection->prepare("SELECT * FROM OPOs WHERE Id = :Id");
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetch();
     }
 
     public function getAll()
@@ -52,6 +52,13 @@ final class OpoRepository
         $stmt->bindParam(':Fase_FK', $updatedOpo['Fase_FK'], PDO::PARAM_INT);
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
 
+        return $stmt->execute();
+    }
+
+    public function delete($id)
+    {
+        $stmt = $this->connection->prepare("DELETE FROM OPOs WHERE Id = :Id");
+        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 }

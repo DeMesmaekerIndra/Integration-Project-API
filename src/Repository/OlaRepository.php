@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Repository;
 
 use PDO;
 use Psr\Container\ContainerInterface;
 
-final class OpoRepository
+final class OlaRepository
 {
     private $connection;
 
@@ -19,6 +18,14 @@ final class OpoRepository
         $stmt = $this->connection->prepare("SELECT * FROM OLAs WHERE Id = :Id");
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function getByOpo($id)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM OLAs WHERE Id IN (SELECT OLA_Id_FK FROM `OPOs-OLAs` WHERE OPO_Id_FK = :Id)");
+        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 
@@ -29,29 +36,32 @@ final class OpoRepository
         return $stmt->fetchAll();
     }
 
-    public function create($newOpo)
+    public function create($newOla, $opoId)
     {
-        $stmt = $this->connection->prepare("INSERT INTO OPOs (Code, Naam, Studiepunten, IsActief, Jaarduur, Fase_FK ) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur, :Fase_FK)");
-        $stmt->bindParam(':Code', $newOpo['Code'], PDO::PARAM_STR);
-        $stmt->bindParam(':Naam', $newOpo['Naam'], PDO::PARAM_STR);
-        $stmt->bindParam(':Studiepunten', $newOpo['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $newOpo['IsActief'], PDO::PARAM_BOOL);
-        $stmt->bindParam(':Jaarduur', $newOpo['Jaarduur'], PDO::PARAM_STR);
-        $stmt->bindParam(':Fase_FK', $newOpo['Fase_FK'], PDO::PARAM_INT);
-        return $stmt->execute();
-    }
+        $this->connection->beginTransaction();
+        $stmt = $this->connection->prepare("INSERT INTO OLAs (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
+        $stmt->bindParam(':Code', $newOla['Code'], PDO::PARAM_STR);
+        $stmt->bindParam(':Naam', $newOla['Naam'], PDO::PARAM_STR);
+        $stmt->bindParam(':Studiepunten', $newOla['Studiepunten'], PDO::PARAM_INT);
+        $stmt->bindParam(':IsActief', $newOla['IsActief'], PDO::PARAM_BOOL);
+        $stmt->bindParam(':Jaarduur', $newOla['Jaarduur'], PDO::PARAM_STR);
 
-    public function update($updatedOpo, $id)
-    {
-        $stmt = $this->connection->prepare("UPDATE OPOs SET (Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur, Fase_FK=:Fase_FK ) WHERE Id=:Id");
-        $stmt->bindParam(':Code', $updatedOpo['Code'], PDO::PARAM_STR);
-        $stmt->bindParam(':Naam', $updatedOpo['Naam'], PDO::PARAM_STR);
-        $stmt->bindParam(':Studiepunten', $updatedOpo['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $updatedOpo['IsActief'], PDO::PARAM_BOOL);
-        $stmt->bindParam(':Jaarduur', $updatedOpo['Jaarduur'], PDO::PARAM_STR);
-        $stmt->bindParam(':Fase_FK', $updatedOpo['Fase_FK'], PDO::PARAM_INT);
-        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
+        if (!$stmt->execute()) {
+            return false;
+        }
 
-        return $stmt->execute();
+        $newOlaId = $this->connection->lastInsertId();
+        $stmt = $this->connection->prepare("INSERT INTO `OPOs-OLAs` (OPO_Id_FK, OLA_Id_FK) VALUES (:OPO_Id_FK, :OLA_Id_FK)");
+        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+        $stmt->bindParam(':OLA_Id_FK', $newOlaId, PDO::PARAM_INT);
+
+        if (!$stmt->execute()) {
+            $this->connection->rollback();
+            return false;
+        }
+
+        $this->connection->commit();
+
+        return $newOlaId;
     }
 }
