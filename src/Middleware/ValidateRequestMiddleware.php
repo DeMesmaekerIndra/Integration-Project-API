@@ -24,13 +24,13 @@ class ValidateRequestMiddleware implements MiddlewareInterface
         $response = new Response();
 
         if (!$postData) {
-            $response->getBody()->write('Not enough data for a new record! Check your request data.');
+            $response->getBody()->write('No data! Check your request data.');
             return $response->withStatus(400);
         }
 
-        foreach ($this->requiredKeys as $key => $value) {
-            if (!array_key_exists($key, $postData)) {
-                $response->getBody()->write('Not enough data for a new record! Check your request data.');
+        foreach ($this->requiredKeys as $key) {
+            if (!isset($postData[$key])) {
+                $response->getBody()->write('Not enough data! Check your request data.');
                 return $response->withStatus(400);
             }
         }

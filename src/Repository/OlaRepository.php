@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 
 final class OpoRepository
 {
-    private $container;
+    private $connection;
 
     public function __construct(ContainerInterface $container)
     {
@@ -16,7 +16,7 @@ final class OpoRepository
 
     public function get($id)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM OPOs WHERE Id = :Id");
+        $stmt = $this->connection->prepare("SELECT * FROM OLAs WHERE Id = :Id");
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -24,7 +24,7 @@ final class OpoRepository
 
     public function getAll()
     {
-        $stmt = $this->connection->prepare("SELECT * FROM OPOs");
+        $stmt = $this->connection->prepare("SELECT * FROM OLAs");
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -43,7 +43,7 @@ final class OpoRepository
 
     public function update($updatedOpo, $id)
     {
-        $stmt = $this->connection->prepare("UPDATE OPOs SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur, Fase_FK=:Fase_FK WHERE Id=:Id");
+        $stmt = $this->connection->prepare("UPDATE OPOs SET (Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur, Fase_FK=:Fase_FK ) WHERE Id=:Id");
         $stmt->bindParam(':Code', $updatedOpo['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $updatedOpo['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $updatedOpo['Studiepunten'], PDO::PARAM_INT);

@@ -4,19 +4,16 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use Pimple\Psr11\Container;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class OpoController
 {
-    private $container;
     private $repo;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
         $this->repo = $container->get('OpoRepository');
     }
 
@@ -42,18 +39,34 @@ final class OpoController
     public function create(Request $request, Response $response): Response
     {
         $newOpo = $request->getParsedBody();
-        
+        $result = $this->repo->create($newOpo);
 
-        $response->getBody()->write('Made it to create method');
+        if (!$result) {
+            $return = array('Message:' => 'Row was not created');
+            $response->getBody()->write(json_encode($return));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
+        $return = array('Message:' => 'Row was created');
+        $response->getBody()->write(json_encode($return));
+
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-
     }
 
-    public function update(Request $request, Response $response): Response
+    public function update(Request $request, Response $response, $args): Response
     {
-        $newOpo = $request->getParsedBody();
+        $updatedOpo = $request->getParsedBody();
+        $result = $this->repo->update($updatedOpo, $args['id']);
 
-        $response->getBody()->write('Made it to update method');
+        if (!$result) {
+            $return = array('Message:' => 'Row was not created');
+            $response->getBody()->write(json_encode($return));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
+        $return = array('Message:' => 'Row was created');
+        $response->getBody()->write(json_encode($return));
+
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }
