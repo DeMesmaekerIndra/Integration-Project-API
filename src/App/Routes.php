@@ -7,31 +7,33 @@ use Slim\Routing\RouteCollectorProxy;
 
 $app->group('/opo', function (RouteCollectorproxy $opoGroup) {
     $opoGroup->get('', 'App\Controller\OpoController:getAll'); //Get all OPO's
-    $opoGroup->post('', 'App\Controller\OpoController:create') //Add new OPO
-        ->add(new ValidateRequestMiddleware(array("Code", "Naam", "Studiepunten", "IsActief", "Jaarduur", "Fase_FK")));
+    $opoGroup->post('', 'App\Controller\OpoController:create') //Create new OPO
+        ->add(new ValidateRequestMiddleware(array('Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur', 'Fase_FK')));
 
-    $opoGroup->get('/ola', 'App\Controller\OpoController:getAllWithOlas'); //Get all OPO with its OLAs
+    $opoGroup->group('/{id:[0-9]+}', function (RouteCollectorproxy $opoIdGroup) {
+        $opoIdGroup->get('', 'App\Controller\OpoController:get'); // Get an OPO
+        $opoIdGroup->delete('', 'App\Controller\OpoController:delete'); //Delete an OPO
+        $opoIdGroup->put('', 'App\Controller\OpoController:update') // Update an OPO
+            ->add(new ValidateRequestMiddleware(array('Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur', 'Fase_FK')));
 
-    $opoGroup->group('/{id:[0-9]+}', function (RouteCollectorproxy $idGroup) {
-        $idGroup->get('', 'App\Controller\OpoController:get'); // Get an OPO
-        $idGroup->put('', 'App\Controller\OpoController:update') // Update an OPO
-            ->add(new ValidateRequestMiddleware(array("Code", "Naam", "Studiepunten", "IsActief", "Jaarduur", "Fase_FK")));
-
-        $idGroup->delete('', 'App\Controller\OpoController:delete');
-
-        $idGroup->get('/ola', 'App\Controller\OpoController:getWithOlas'); //Get OPO with its OLA's
-        $idGroup->post('/ola', 'App\Controller\OlaController:create') //Create OLA under OPO
-            ->add(new ValidateRequestMiddleware(array("Code", "Naam", "Studiepunten", "IsActief", "Jaarduur")));
+        $opoIdGroup->post('/ola', 'App\Controller\OlaController:createUnderOpo') //Create OLA under OPO
+            ->add(new ValidateRequestMiddleware(array('Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur')));
+        $opoIdGroup->put('/ola/{olaid:[0-9]+', 'App\Controller\OpoController:AddOlaToOpo'); //Add existing OLA to existing OPO
     });
 });
 
-$app->group('/ola', function (RouteCollectorProxy $group) {
-    $group->get('', 'App\Controller\OlaController:getAll');
-    /* $group->post('', 'App\Controller\OpoController:create')
-->add(new ValidateRequestMiddleware(array("Code", "Naam", "Studiepunten", "IsActief", "Jaarduur", "Coordinator_FK", "Fase_FK")));
-$group->get('/{id}', 'App\Controller\OpoController:get');
-$group->put('/{id}', 'App\Controller\OpoController:update')
-->add(new ValidateRequestMiddleware(array("Code", "Naam", "Studiepunten", "IsActief", "Jaarduur", "Coordinator_FK", "Fase_FK")));*/
+$app->group('/ola', function (RouteCollectorProxy $olaGroup) {
+    $olaGroup->get('', 'App\Controller\OlaController:getAll'); //Get all OLA's
+    $olaGroup->post('', 'App\Controller\OlaController:create') //Create an Ola
+        ->add(new ValidateRequestMiddleware(array('Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur')));
+
+    $olaGroup->group('/{id:[0-9]+}', function (RouteCollectorproxy $olaIdGroup) {
+        $olaIdGroup->get('', 'App\Controller\OlaController:get'); //Get an OLA
+        $olaIdGroup->delete('', 'App\Controller\OlaController:delete'); //Delete an OLA
+        $olaIdGroup->put('', 'App\Controller\OlaController:update') //update an OLA
+            ->add(new ValidateRequestMiddleware(array('Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur')));
+    });
+
 });
 
 /*

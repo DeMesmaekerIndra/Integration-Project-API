@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-final class OpoController
+final class OpoController extends BaseController
 {
     private $opoRepository;
     private $olaRepository;
@@ -21,42 +21,34 @@ final class OpoController
 
     public function get(Request $request, Response $response, $args): Response
     {
-        $result = $this->opoRepository->get($args['id']);
+        $qsParams = $request->getQueryParams();
+        $id = $args['id'];
+
+        $result = $this->opoRepository->get($id);
+
+        if ($this->findQsParamValue($qsParams, 'o') === 'true') {
+            $result['OLAs'] = $this->olaRepository->getByOpo($id);
+        }
+
         $message = ['data' => $result];
         $return = json_encode($message);
         $response->getBody()->write($return);
-        return $response->withStatus(200);
-    }
-
-    public function getWithOlas(Request $request, Response $response, $args): Response
-    {
-        $id = $args['id'];
-        $opo = $this->opoRepository->get($id);
-        $opo['OLAs'] = $this->olaRepository->getByOpo($id);
-        $return = ['data' => $opo];
-        $response->getBody()->write(json_encode($return));
         return $response->withStatus(200);
     }
 
     public function getAll(Request $request, Response $response, $args): Response
     {
-        $result = $this->opoRepository->getAll();
-        $message = ['data' => $result];
-        $return = json_encode($message);
-        $response->getBody()->write($return);
-        return $response->withStatus(200);
-    }
-
-    public function getAllWithOlas(Request $request, Response $response, $args): Response
-    {
+        $qsParams = $request->getQueryParams();
         $return = ['data' => []];
-        $opoList = $this->opoRepository->getAll();
+        $result = $this->opoRepository->getAll();
 
-        foreach ($opoList as &$opo) {
-            $extendedOpo = $opo;
-            $extendedOpo['OLAs'] = $this->olaRepository->getByOpo($extendedOpo['Id']);
-            array_push($return['data'], $extendedOpo);
+        if ($this->findQsParamValue($qsParams, 'o') === 'true') {
+            for ($i = 0; $i < count($result); $i++) {
+                $result[$i]['OLAs'] = $this->olaRepository->getByOpo($result[$i]['Id']);
+            }
         }
+
+        $return = ['data' => $result];
 
         $response->getBody()->write(json_encode($return));
         return $response->withStatus(200);
@@ -112,4 +104,22 @@ final class OpoController
         return $response->withStatus(200);
     }
 
+    public function AddOlaToOpo(Request $request, Response $response, $args): Response
+    {
+        $opoId = $args['id'];
+        $olaId = $args['olaid'];
+        $result = $this->olaRepository->AddOlaToOpo($opoId, $olaId);
+
+        if (!$result) {
+            $return = array('Message:' => 'Row was not created');
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
+        }
+
+        $return = array('Message:' => "OLA: $olaId was linked to OPO: $opoId");
+        $response->getBody()->write(json_encode($return));
+
+        return $response->withStatus(200);
+
+    }
 }
