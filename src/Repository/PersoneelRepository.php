@@ -29,19 +29,38 @@ final class PersoneelRepository
         return $stmt->fetchAll();
     }
 
+    public function getByOpo($id)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM onderwijs_personeel WHERE Id IN (SELECT Coordinator_Id_FK FROM `opos-onderwijspersoneel` WHERE OPO_Id_FK = :Id)");
+        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        if (!$result) {
+            return null;
+        }
+
+        return $result;
+    }
+
+    public function getByOla($id)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM onderwijs_personeel WHERE Id IN (SELECT Docent_Id_FK FROM `olas-onderwijspersoneel` WHERE OLA_Id_FK = :Id)");
+        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function create($body)
     {
-        $stmt = $this->connection->prepare("INSERT INTO onderwijs_personeel (Voornaam, Achternaam, Email , GSM) VALUES (:Voornaam, :Achternaam, :Email, :GSM)");
+        $stmt = $this->connection->prepare("INSERT INTO onderwijs_personeel (Id, Voornaam, Achternaam, Email , GSM) VALUES (:Id,:Voornaam, :Achternaam, :Email, :GSM)");
+        $stmt->bindParam(':Id', $body['Id'], PDO::PARAM_STR);
         $stmt->bindParam(':Voornaam', $body['Voornaam'], PDO::PARAM_STR);
         $stmt->bindParam(':Achternaam', $body['Achternaam'], PDO::PARAM_STR);
         $stmt->bindParam(':Email', $body['Email'], PDO::PARAM_STR);
         $stmt->bindParam(':GSM', $body['GSM'], PDO::PARAM_STR);
 
-        if ($stmt->execute()) {
-            return false;
-        }
-
-        return $this->connection->lastInsertId();
+        return $stmt->execute();
     }
 
     public function update($id, $body)

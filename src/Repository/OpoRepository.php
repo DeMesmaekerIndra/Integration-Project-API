@@ -46,7 +46,7 @@ final class OpoRepository
         $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_BOOL);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
         $stmt->bindParam(':Fase_FK', $body['Fase_FK'], PDO::PARAM_INT);
-        if ($stmt->execute()) {
+        if (!$stmt->execute()) {
             return false;
         }
 
@@ -86,7 +86,7 @@ final class OpoRepository
     {
         $stmt = $this->connection->prepare("INSERT INTO `opos-onderwijspersoneel` (OPO_Id_FK, Coordinator_Id_FK, Toewijzingsdatum) VALUES (:OPO_Id_FK, :Coordinator_Id_FK, :Toewijzingsdatum)");
         $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
-        $stmt->bindParam(':Coordinator_Id_FK', $olcoordinatorIdaId, PDO::PARAM_STR);
+        $stmt->bindParam(':Coordinator_Id_FK', $coordinatorId, PDO::PARAM_STR);
         $stmt->bindParam(':Toewijzingsdatum', $body['Toewijzingsdatum'], PDO::PARAM_STR);
         return $stmt->execute();
     }

@@ -12,11 +12,13 @@ final class OlaController extends BaseController
 {
     private $opoRepository;
     private $olaRepository;
+    private $PersponeelRepository;
 
     public function __construct(ContainerInterface $container)
     {
         $this->opoRepository = $container->get('OpoRepository');
         $this->olaRepository = $container->get('OlaRepository');
+        $this->PersponeelRepository = $container->get('PersoneelRepository');
     }
 
     public function get(Request $request, Response $response, $args): Response
@@ -26,6 +28,16 @@ final class OlaController extends BaseController
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
             $result['OPOs'] = $this->opoRepository->getByOla($args['id']);
+        }
+
+        if ($this->findQsParamValue($qsParams, 'd') === 'true') {
+            $result['docenten'] = $this->PersponeelRepository->getByOla($id);
+        }
+
+        if (!$result) {
+            $return = ['Message:' => "Could not find OLA with id: $id"];
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
         }
 
         $message = ['data' => $result];
@@ -44,6 +56,12 @@ final class OlaController extends BaseController
             for ($i = 0; $i < count($result); $i++) {
                 $result[$i]['OPOs'] = $this->opoRepository->getByOla($result[$i]['Id']);
             }
+        }
+
+        if (!$result) {
+            $return = ['Message:' => "Could not retrieve OLAs"];
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
         }
 
         $return = ['data' => $result];

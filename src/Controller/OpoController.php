@@ -12,11 +12,13 @@ final class OpoController extends BaseController
 {
     private $opoRepository;
     private $olaRepository;
+    private $PersponeelRepository;
 
     public function __construct(ContainerInterface $container)
     {
         $this->opoRepository = $container->get('OpoRepository');
         $this->olaRepository = $container->get('OlaRepository');
+        $this->PersponeelRepository = $container->get('PersoneelRepository');
     }
 
     public function get(Request $request, Response $response, $args): Response
@@ -28,6 +30,16 @@ final class OpoController extends BaseController
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
             $result['OLAs'] = $this->olaRepository->getByOpo($id);
+        }
+
+        if ($this->findQsParamValue($qsParams, 'c') === 'true') {
+            $result['Coordinator'] = $this->PersponeelRepository->getByOpo($id);
+        }
+
+        if (!$result) {
+            $return = ['Message:' => "Could not find OPO with id: $id"];
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
         }
 
         $message = ['data' => $result];
@@ -48,13 +60,23 @@ final class OpoController extends BaseController
             }
         }
 
-        $return = ['data' => $result];
+        if ($this->findQsParamValue($qsParams, 'c') === 'true') {
+            for ($i = 0; $i < count($result); $i++) {
+                $result[$i]['Coordinator'] = $this->PersponeelRepository->getByOpo($result[$i]['Id']);
+            }
+        }
 
+        if (!$result) {
+            $return = ['Message:' => 'Could not retrieve OPOs'];
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
+        }
+
+        $return = ['data' => $result];
         $response->getBody()->write(json_encode($return));
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
@@ -72,7 +94,6 @@ final class OpoController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function update(Request $request, Response $response, $args): Response
     {
         $body = $request->getParsedBody();
@@ -90,7 +111,6 @@ final class OpoController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function delete(Request $request, Response $response, $args): Response
     {
         $result = $this->opoRepository->delete($args['id']);
@@ -107,7 +127,6 @@ final class OpoController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function addOla(Request $request, Response $response, $args): Response
     {
         $opoId = $args['id'];
@@ -127,7 +146,6 @@ final class OpoController extends BaseController
 
     }
 
-    //TODO: testing
     public function addCoordinator(Request $request, Response $response, $args): Response
     {
         $opoId = $args['id'];

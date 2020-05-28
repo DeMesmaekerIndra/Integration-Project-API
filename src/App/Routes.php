@@ -21,7 +21,7 @@ $app->group('/opo', function (RouteCollectorproxy $opoGroup) {
 
         $opoIdGroup->post('/ola', 'App\Controller\OlaController:createUnderOpo') //Create OLA under OPO
             ->add(new ValidateRequestMiddleware(['Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur']));
-        $opoIdGroup->put('/ola/{olaid:[0-9]+', 'App\Controller\OpoController:addOla'); //Add existing OLA to existing OPO
+        $opoIdGroup->put('/ola/{olaid:[0-9]+}', 'App\Controller\OpoController:addOla'); //Add existing OLA to existing OPO
     });
 });
 
@@ -35,7 +35,7 @@ $app->group('/ola', function (RouteCollectorProxy $olaGroup) {
         $olaIdGroup->delete('', 'App\Controller\OlaController:delete'); //Delete an OLA
         $olaIdGroup->put('', 'App\Controller\OlaController:update') //update an OLA
             ->add(new ValidateRequestMiddleware(['Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur']));
-        $opoIdGroup->put('/coordinator', 'App\Controller\OlaController:AddDocent') //Add existing employees to Ola
+        $olaIdGroup->put('/coordinator', 'App\Controller\OlaController:AddDocent') //Add existing employees to Ola
             ->add(new ValidateRequestMiddleware(['DocentenIds', 'Toewijzingsdatum']));
     });
 });
@@ -43,7 +43,7 @@ $app->group('/ola', function (RouteCollectorProxy $olaGroup) {
 $app->group('/personeel', function (RouteCollectorProxy $personeelGroup) {
     $personeelGroup->get('', 'App\Controller\PersoneelController:getAll'); //Get all employees
     $personeelGroup->post('', 'App\Controller\PersoneelController:create') //Create an employee
-        ->add(new ValidateRequestMiddleware(['Voornaam', 'Achternaam', 'Email', 'GSM']));
+        ->add(new ValidateRequestMiddleware(['Id', 'Voornaam', 'Achternaam', 'Email', 'GSM']));
 
     $personeelGroup->group('/{id}', function (RouteCollectorproxy $personeelIdGroup) {
         $personeelIdGroup->get('', 'App\Controller\PersoneelController:get'); //Get an employee

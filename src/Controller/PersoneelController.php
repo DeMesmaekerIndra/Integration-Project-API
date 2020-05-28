@@ -51,12 +51,12 @@ final class PersoneelController extends BaseController
         $result = $this->personeelRepository->create($body);
 
         if (!$result) {
-            $return = array('Message:' => 'Row was not created');
+            $return = ['Message:' => 'Row was not created'];
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
 
-        $return = array('Message:' => 'Row was created', 'data' => ['Id' => $result]);
+        $return = ['Message:' => 'Row was created'];
         $response->getBody()->write(json_encode($return));
         return $response->withStatus(200);
     }
