@@ -102,4 +102,23 @@ final class OlaRepository
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function addDocent($olaId, $body)
+    {
+        $this->connection->beginTransaction();
+
+        foreach ($body['DocentenIds'] as &$docentId) {
+            $stmt = $this->connection->prepare("INSERT INTO `olas-onderwijspersoneel` (OLA_Id_FK, Docent_Id_FK, Toewijzingsdatum) VALUES (:OLA_Id_FK, :Docent_Id_FK, :Toewijzingsdatum)");
+            $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
+            $stmt->bindParam(':Docent_Id_FK', $olcoordinatorIdaId, PDO::PARAM_STR);
+            $stmt->bindParam(':Toewijzingsdatum', $body['Toewijzingsdatum'], PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $this->connection->rollback();
+                return false;
+            }
+        }
+
+        $this->connection->commit();
+        return true;
+    }
 }

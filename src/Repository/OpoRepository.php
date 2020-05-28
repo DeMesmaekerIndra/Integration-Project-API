@@ -46,7 +46,11 @@ final class OpoRepository
         $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_BOOL);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
         $stmt->bindParam(':Fase_FK', $body['Fase_FK'], PDO::PARAM_INT);
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return false;
+        }
+
+        return $this->connection->lastInsertId();
     }
 
     public function update($body, $id)
@@ -70,11 +74,20 @@ final class OpoRepository
         return $stmt->execute();
     }
 
-    public function AddOlaToOpo($opoId, $olaId)
+    public function addOla($opoId, $olaId)
     {
         $stmt = $this->connection->prepare("INSERT INTO `OPOs-OLAs` (OPO_Id_FK, OLA_Id_FK) VALUES (:OPO_Id_FK, :OLA_Id_FK)");
-        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_STR);
-        $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_STR);
+        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+        $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    public function addCoordinator($opoId, $coordinatorId, $body)
+    {
+        $stmt = $this->connection->prepare("INSERT INTO `opos-onderwijspersoneel` (OPO_Id_FK, Coordinator_Id_FK, Toewijzingsdatum) VALUES (:OPO_Id_FK, :Coordinator_Id_FK, :Toewijzingsdatum)");
+        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+        $stmt->bindParam(':Coordinator_Id_FK', $olcoordinatorIdaId, PDO::PARAM_STR);
+        $stmt->bindParam(':Toewijzingsdatum', $body['Toewijzingsdatum'], PDO::PARAM_STR);
         return $stmt->execute();
     }
 }

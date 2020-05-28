@@ -54,10 +54,11 @@ final class OpoController extends BaseController
         return $response->withStatus(200);
     }
 
+    //TODO: testing
     public function create(Request $request, Response $response): Response
     {
-        $newOpo = $request->getParsedBody();
-        $result = $this->opoRepository->create($newOpo);
+        $body = $request->getParsedBody();
+        $result = $this->opoRepository->create($body);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not created');
@@ -65,16 +66,17 @@ final class OpoController extends BaseController
             return $response->withStatus(400);
         }
 
-        $return = array('Message:' => 'Row was created');
+        $return = array('Message:' => 'Row was created', 'data' => ['Id' => $result]);
         $response->getBody()->write(json_encode($return));
 
         return $response->withStatus(200);
     }
 
+    //TODO: testing
     public function update(Request $request, Response $response, $args): Response
     {
-        $updatedOpo = $request->getParsedBody();
-        $result = $this->opoRepository->update($updatedOpo, $args['id']);
+        $body = $request->getParsedBody();
+        $result = $this->opoRepository->update($body, $args['id']);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not updated');
@@ -88,6 +90,7 @@ final class OpoController extends BaseController
         return $response->withStatus(200);
     }
 
+    //TODO: testing
     public function delete(Request $request, Response $response, $args): Response
     {
         $result = $this->opoRepository->delete($args['id']);
@@ -104,14 +107,15 @@ final class OpoController extends BaseController
         return $response->withStatus(200);
     }
 
-    public function AddOlaToOpo(Request $request, Response $response, $args): Response
+    //TODO: testing
+    public function addOla(Request $request, Response $response, $args): Response
     {
         $opoId = $args['id'];
         $olaId = $args['olaid'];
-        $result = $this->olaRepository->AddOlaToOpo($opoId, $olaId);
+        $result = $this->OpoRepository->addOla($opoId, $olaId);
 
         if (!$result) {
-            $return = array('Message:' => 'Row was not created');
+            $return = array('Message:' => "Could not link OLA: $olaId with OPO: $opoId");
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
@@ -121,5 +125,25 @@ final class OpoController extends BaseController
 
         return $response->withStatus(200);
 
+    }
+
+    //TODO: testing
+    public function addCoordinator(Request $request, Response $response, $args): Response
+    {
+        $opoId = $args['id'];
+        $coordinatorId = $args['coordinatorid'];
+        $body = $request->getParsedBody();
+        $result = $this->opoRepository->addCoordinator($opoId, $coordinatorId, $body);
+
+        if (!$result) {
+            $return = ['Message:' => "Could not link coordinator: $coordinatorId with OPO: $opoId"];
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
+        }
+
+        $return = ['Message:' => "Coordinator: $coordinatorId was linked to OPO: $opoId"];
+        $response->getBody()->write(json_encode($return));
+
+        return $response->withStatus(200);
     }
 }

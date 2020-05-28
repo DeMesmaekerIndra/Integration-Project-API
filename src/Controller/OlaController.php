@@ -52,10 +52,11 @@ final class OlaController extends BaseController
         return $response->withStatus(200);
     }
 
+    //TODO: testing
     public function create(Request $request, Response $response, $args): Response
     {
-        $newOla = $request->getParsedBody();
-        $result = $this->olaRepository->create($newOla);
+        $body = $request->getParsedBody();
+        $result = $this->olaRepository->create($body);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not created');
@@ -69,11 +70,12 @@ final class OlaController extends BaseController
         return $response->withStatus(200);
     }
 
+    //TODO: testing
     public function createUnderOpo(Request $request, Response $response, $args): Response
     {
         $olaId = $args['id'];
-        $newOla = $request->getParsedBody();
-        $result = $this->olaRepository->createUnderOpo($newOla, $olaId);
+        $body = $request->getParsedBody();
+        $result = $this->olaRepository->createUnderOpo($body, $olaId);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not created');
@@ -88,10 +90,11 @@ final class OlaController extends BaseController
 
     }
 
+    //TODO: testing
     public function update(Request $request, Response $response, $args): Response
     {
-        $updatedOla = $request->getParsedBody();
-        $result = $this->olaRepository->update($updatedOla, $args['id']);
+        $body = $request->getParsedBody();
+        $result = $this->olaRepository->update($body, $args['id']);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not updated');
@@ -106,6 +109,7 @@ final class OlaController extends BaseController
 
     }
 
+    //TODO: testing
     public function delete(Request $request, Response $response, $args): Response
     {
         $result = $this->olaRepository->delete($args['id']);
@@ -119,6 +123,24 @@ final class OlaController extends BaseController
         $return = array('Message:' => 'Row was deleted');
         $response->getBody()->write(json_encode($return));
 
+        return $response->withStatus(200);
+    }
+
+    //TODO: testing
+    public function addDocent(Request $request, Response $response, $args): Response
+    {
+        $olaId = $args['id'];
+        $body = $request->getParsedBody();
+        $result = $this->olaRepository->addDocent($olaId, $body);
+
+        if (!$result) {
+            $return = ['Message:' => "Could not link the docent(en) to OLA: $olaId"];
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
+        }
+
+        $return = ['Message:' => "Docent(en) linked to OLA: $olaId"];
+        $response->getBody()->write(json_encode($return));
         return $response->withStatus(200);
     }
 }
