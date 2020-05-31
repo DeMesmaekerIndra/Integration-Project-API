@@ -35,7 +35,7 @@ $app->group('/ola', function (RouteCollectorProxy $olaGroup) {
         $olaIdGroup->delete('', 'App\Controller\OlaController:delete'); //Delete an OLA
         $olaIdGroup->put('', 'App\Controller\OlaController:update') //update an OLA
             ->add(new ValidateRequestMiddleware(['Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur']));
-        $olaIdGroup->put('/coordinator', 'App\Controller\OlaController:AddDocent') //Add existing employees to Ola
+        $olaIdGroup->put('/Docent', 'App\Controller\OlaController:AddDocent') //Add existing employees to Ola
             ->add(new ValidateRequestMiddleware(['DocentenIds', 'Toewijzingsdatum']));
     });
 });

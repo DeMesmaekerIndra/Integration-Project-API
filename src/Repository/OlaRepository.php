@@ -110,7 +110,7 @@ final class OlaRepository
         foreach ($body['DocentenIds'] as &$docentId) {
             $stmt = $this->connection->prepare("INSERT INTO `olas-onderwijspersoneel` (OLA_Id_FK, Docent_Id_FK, Toewijzingsdatum) VALUES (:OLA_Id_FK, :Docent_Id_FK, :Toewijzingsdatum)");
             $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
-            $stmt->bindParam(':Docent_Id_FK', $olcoordinatorIdaId, PDO::PARAM_STR);
+            $stmt->bindParam(':Docent_Id_FK', $docentId, PDO::PARAM_STR);
             $stmt->bindParam(':Toewijzingsdatum', $body['Toewijzingsdatum'], PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $this->connection->rollback();

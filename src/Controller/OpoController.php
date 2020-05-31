@@ -131,7 +131,7 @@ final class OpoController extends BaseController
     {
         $opoId = $args['id'];
         $olaId = $args['olaid'];
-        $result = $this->OpoRepository->addOla($opoId, $olaId);
+        $result = $this->opoRepository->addOla($opoId, $olaId);
 
         if (!$result) {
             $return = array('Message:' => "Could not link OLA: $olaId with OPO: $opoId");

@@ -24,10 +24,11 @@ final class OlaController extends BaseController
     public function get(Request $request, Response $response, $args): Response
     {
         $qsParams = $request->getQueryParams();
-        $result = $this->olaRepository->get($args['id']);
+        $id = $args['id'];
+        $result = $this->olaRepository->get($id);
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
-            $result['OPOs'] = $this->opoRepository->getByOla($args['id']);
+            $result['OPOs'] = $this->opoRepository->getByOla($id);
         }
 
         if ($this->findQsParamValue($qsParams, 'd') === 'true') {
@@ -55,6 +56,12 @@ final class OlaController extends BaseController
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
             for ($i = 0; $i < count($result); $i++) {
                 $result[$i]['OPOs'] = $this->opoRepository->getByOla($result[$i]['Id']);
+            }
+        }
+
+        if ($this->findQsParamValue($qsParams, 'd') === 'true') {
+            for ($i = 0; $i < count($result); $i++) {
+                $result[$i]['Docenten'] = $this->PersponeelRepository->getByOla($result[$i]['Id']);
             }
         }
 
