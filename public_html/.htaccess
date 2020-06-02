@@ -1,6 +1,4 @@
 
-# HTID:14176250: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
-php_value display_errors 1
 <IfModule mod_rewrite.c>
   RewriteEngine on
   RewriteBase /
@@ -8,4 +6,3 @@ php_value display_errors 1
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.php [QSA,L]
 </IfModule>
-# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:14176250:
