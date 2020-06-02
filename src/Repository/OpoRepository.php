@@ -82,12 +82,28 @@ final class OpoRepository
         return $stmt->execute();
     }
 
+    public function removeOla($opoId, $olaId)
+    {
+        $stmt = $this->connection->prepare("DELETE FROM `OPOs-OLAs` WHERE OPO_Id_FK = :OPO_Id_FK AND OLA_Id_FK = :OLA_Id_FK");
+        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+        $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
     public function addCoordinator($opoId, $coordinatorId, $body)
     {
         $stmt = $this->connection->prepare("INSERT INTO `opos-onderwijspersoneel` (OPO_Id_FK, Coordinator_Id_FK, Toewijzingsdatum) VALUES (:OPO_Id_FK, :Coordinator_Id_FK, :Toewijzingsdatum)");
         $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
         $stmt->bindParam(':Coordinator_Id_FK', $coordinatorId, PDO::PARAM_STR);
         $stmt->bindParam(':Toewijzingsdatum', $body['Toewijzingsdatum'], PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function removeCoordinator($opoId, $coordinatorId)
+    {
+        $stmt = $this->connection->prepare("DELETE FROM `opos-onderwijspersoneel` WHERE Coordinator_Id_FK = :Coordinator_Id_FK AND OPO_Id_FK = :OPO_Id_FK");
+        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+        $stmt->bindParam(':Coordinator_Id_FK', $coordinatorId, PDO::PARAM_STR);
         return $stmt->execute();
     }
 }

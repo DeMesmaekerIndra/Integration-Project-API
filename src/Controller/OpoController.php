@@ -146,6 +146,25 @@ final class OpoController extends BaseController
 
     }
 
+    public function removeOla(Request $request, Response $response, $args): Response
+    {
+        $opoId = $args['id'];
+        $olaId = $args['olaid'];
+        $result = $this->opoRepository->removeOla($opoId, $olaId);
+
+        if (!$result) {
+            $return = array('Message:' => "Could remove OLA: $olaId from OPO: $opoId");
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
+        }
+
+        $return = array('Message:' => "OLA: $olaId was removed from OPO: $opoId");
+        $response->getBody()->write(json_encode($return));
+
+        return $response->withStatus(200);
+
+    }
+
     public function addCoordinator(Request $request, Response $response, $args): Response
     {
         $opoId = $args['id'];
@@ -160,6 +179,24 @@ final class OpoController extends BaseController
         }
 
         $return = ['Message:' => "Coordinator: $coordinatorId was linked to OPO: $opoId"];
+        $response->getBody()->write(json_encode($return));
+
+        return $response->withStatus(200);
+    }
+
+    public function removeCoordinator(Request $request, Response $response, $args): Response
+    {
+        $opoId = $args['id'];
+        $coordinatorId = $args['coordinatorid'];
+        $result = $this->opoRepository->removeCoordinator($opoId, $coordinatorId);
+
+        if (!$result) {
+            $return = ['Message:' => "Could not remove coordinator: $coordinatorId from OPO: $opoId"];
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
+        }
+
+        $return = ['Message:' => "Coordinator: $coordinatorId was removed from OPO: $opoId"];
         $response->getBody()->write(json_encode($return));
 
         return $response->withStatus(200);

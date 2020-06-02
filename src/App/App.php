@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 use Pimple\Container as PimpleContainer;
 use Pimple\Psr11\Container as Psr11Container;
+use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Factory\AppFactory;
 
 final class App
@@ -43,7 +44,7 @@ final class App
         $displayError = filter_var($_SERVER['DISPLAY_ERROR_DETAILS'], FILTER_VALIDATE_BOOLEAN);
         $app->addErrorMiddleware($displayError, true, true);
 
-        //Set up headers
+        //Set up middleware to define headers
         $app->add(function ($request, $handler) {
             $response = $handler->handle($request);
             return $response
@@ -59,8 +60,10 @@ final class App
         require __DIR__ . '/Repositories.php';
 
         // Catch all 404 not found
-        $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response): void {
-            throw new Slim\Exception\HttpNotFoundException($request);
+        $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response): Response {
+            $return = ['Message' => 'The endpoint you tried to access does not exist. Double check your URI & method!'];
+            $response->getbody()->write(json_encode($return));
+            return $response->withStatus(200);
         });
 
         return $app;

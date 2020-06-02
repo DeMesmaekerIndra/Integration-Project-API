@@ -77,7 +77,6 @@ final class OlaController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function create(Request $request, Response $response, $args): Response
     {
         $body = $request->getParsedBody();
@@ -95,7 +94,6 @@ final class OlaController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function createUnderOpo(Request $request, Response $response, $args): Response
     {
         $olaId = $args['id'];
@@ -115,7 +113,6 @@ final class OlaController extends BaseController
 
     }
 
-    //TODO: testing
     public function update(Request $request, Response $response, $args): Response
     {
         $body = $request->getParsedBody();
@@ -134,7 +131,6 @@ final class OlaController extends BaseController
 
     }
 
-    //TODO: testing
     public function delete(Request $request, Response $response, $args): Response
     {
         $result = $this->olaRepository->delete($args['id']);
@@ -151,7 +147,6 @@ final class OlaController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function addDocent(Request $request, Response $response, $args): Response
     {
         $olaId = $args['id'];
@@ -165,6 +160,23 @@ final class OlaController extends BaseController
         }
 
         $return = ['Message:' => "Docent(en) linked to OLA: $olaId"];
+        $response->getBody()->write(json_encode($return));
+        return $response->withStatus(200);
+    }
+
+    public function removeDocent(Request $request, Response $response, $args): Response
+    {
+        $olaId = $args['id'];
+        $docentId = $args['docentid'];
+        $result = $this->olaRepository->removeDocent($olaId, $docentId);
+
+        if (!$result) {
+            $return = ['Message:' => "Could not remove docent: $docentId from OLA: $olaId"];
+            $response->getBody()->write(json_encode($return));
+            return $response->withStatus(400);
+        }
+
+        $return = ['Message:' => "Docent: $docentId linked to OLA: $olaId"];
         $response->getBody()->write(json_encode($return));
         return $response->withStatus(200);
     }

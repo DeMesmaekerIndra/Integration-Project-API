@@ -121,4 +121,12 @@ final class OlaRepository
         $this->connection->commit();
         return true;
     }
+
+    public function removeDocent($olaId, $docentId)
+    {
+        $stmt = $this->connection->prepare("DELETE FROM `olas-onderwijspersoneel` WHERE Docent_Id_FK = :Docent_Id_FK AND OLA_Id_FK = :OLA_Id_FK");
+        $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
+        $stmt->bindParam(':Docent_Id_FK', $docentId, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }

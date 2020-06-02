@@ -17,7 +17,6 @@ final class PersoneelController extends BaseController
         $this->personeelRepository = $container->get('PersoneelRepository');
     }
 
-    //TODO: testing
     public function get(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
@@ -35,7 +34,6 @@ final class PersoneelController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function getAll(Request $request, Response $response, $args): Response
     {
         $result = $this->personeelRepository->getAll();
@@ -44,7 +42,6 @@ final class PersoneelController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
@@ -61,7 +58,6 @@ final class PersoneelController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function update(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
@@ -80,7 +76,6 @@ final class PersoneelController extends BaseController
         return $response->withStatus(200);
     }
 
-    //TODO: testing
     public function delete(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
