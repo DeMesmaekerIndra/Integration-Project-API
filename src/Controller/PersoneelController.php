@@ -10,17 +10,17 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class PersoneelController extends BaseController
 {
-    private $personeelRepository;
+    private $personeelService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->personeelRepository = $container->get('PersoneelRepository');
+        $this->personeelService = $container->get('PersoneelService');
     }
 
     public function get(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
-        $result = $this->personeelRepository->get($id);
+        $result = $this->personeelService->get($id);
 
         if (!$result) {
             $return = ['Message:' => "Could not find employee with id: $id"];
@@ -36,7 +36,7 @@ final class PersoneelController extends BaseController
 
     public function getAll(Request $request, Response $response, $args): Response
     {
-        $result = $this->personeelRepository->getAll();
+        $result = $this->personeelService->getAll();
         $return = ['data' => $result];
         $response->getBody()->write(json_encode($return));
         return $response->withStatus(200);
@@ -45,7 +45,7 @@ final class PersoneelController extends BaseController
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $result = $this->personeelRepository->create($body);
+        $result = $this->personeelService->create($body);
 
         if (!$result) {
             $return = ['Message:' => 'Row was not created'];
@@ -62,7 +62,7 @@ final class PersoneelController extends BaseController
     {
         $id = $args['id'];
         $body = $request->getParsedBody();
-        $result = $this->personeelRepository->update($id, $body);
+        $result = $this->personeelService->update($id, $body);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not updated');
@@ -79,7 +79,7 @@ final class PersoneelController extends BaseController
     public function delete(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
-        $result = $this->personeelRepository->delete($id);
+        $result = $this->personeelService->delete($id);
 
         if (!$result) {
             $return = ['Message:' => 'Row was not deleted'];

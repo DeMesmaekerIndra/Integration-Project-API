@@ -19,7 +19,6 @@ final class OpoController extends BaseController
         $this->opoService = $container->get('OpoService');
         $this->olaService = $container->get('OlaService');
         $this->personeelService = $container->get('PersoneelService');
-
     }
 
     public function get(Request $request, Response $response, $args): Response

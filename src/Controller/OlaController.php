@@ -10,29 +10,29 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class OlaController extends BaseController
 {
-    private $opoRepository;
-    private $olaRepository;
-    private $PersponeelRepository;
+    private $opoService;
+    private $olaService;
+    private $personeelService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->opoRepository = $container->get('OpoRepository');
-        $this->olaRepository = $container->get('OlaRepository');
-        $this->PersponeelRepository = $container->get('PersoneelRepository');
+        $this->opoService = $container->get('OpoService');
+        $this->olaService = $container->get('OlaService');
+        $this->personeelService = $container->get('PersoneelService');
     }
 
     public function get(Request $request, Response $response, $args): Response
     {
         $qsParams = $request->getQueryParams();
         $id = $args['id'];
-        $result = $this->olaRepository->get($id);
+        $result = $this->olaService->get($id);
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
-            $result['OPOs'] = $this->opoRepository->getByOla($id);
+            $result['OPOs'] = $this->opoService->getByOla($id);
         }
 
         if ($this->findQsParamValue($qsParams, 'd') === 'true') {
-            $result['docenten'] = $this->PersponeelRepository->getByOla($id);
+            $result['docenten'] = $this->personeelService->getByOla($id);
         }
 
         if (!$result) {
@@ -49,17 +49,17 @@ final class OlaController extends BaseController
     {
         $qsParams = $request->getQueryParams();
         $return = ['data' => []];
-        $result = $this->olaRepository->getAll();
+        $result = $this->olaService->getAll();
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
             for ($i = 0; $i < count($result); $i++) {
-                $result[$i]['OPOs'] = $this->opoRepository->getByOla($result[$i]['Id']);
+                $result[$i]['OPOs'] = $this->opoService->getByOla($result[$i]['Id']);
             }
         }
 
         if ($this->findQsParamValue($qsParams, 'd') === 'true') {
             for ($i = 0; $i < count($result); $i++) {
-                $result[$i]['Docenten'] = $this->PersponeelRepository->getByOla($result[$i]['Id']);
+                $result[$i]['Docenten'] = $this->personeelService->getByOla($result[$i]['Id']);
             }
         }
 
@@ -78,7 +78,7 @@ final class OlaController extends BaseController
     public function create(Request $request, Response $response, $args): Response
     {
         $body = $request->getParsedBody();
-        $result = $this->olaRepository->create($body);
+        $result = $this->olaService->create($body);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not created');
@@ -96,7 +96,7 @@ final class OlaController extends BaseController
     {
         $olaId = $args['id'];
         $body = $request->getParsedBody();
-        $result = $this->olaRepository->createUnderOpo($body, $olaId);
+        $result = $this->olaService->createUnderOpo($body, $olaId);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not created');
@@ -114,7 +114,7 @@ final class OlaController extends BaseController
     public function update(Request $request, Response $response, $args): Response
     {
         $body = $request->getParsedBody();
-        $result = $this->olaRepository->update($body, $args['id']);
+        $result = $this->olaService->update($body, $args['id']);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not updated');
@@ -131,7 +131,7 @@ final class OlaController extends BaseController
 
     public function delete(Request $request, Response $response, $args): Response
     {
-        $result = $this->olaRepository->delete($args['id']);
+        $result = $this->olaService->delete($args['id']);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not deleted');
@@ -149,7 +149,7 @@ final class OlaController extends BaseController
     {
         $olaId = $args['id'];
         $body = $request->getParsedBody();
-        $result = $this->olaRepository->addDocent($olaId, $body);
+        $result = $this->olaService->addDocent($olaId, $body);
 
         if (!$result) {
             $return = ['Message:' => "Could not link the docent(en) to OLA: $olaId"];
@@ -166,7 +166,7 @@ final class OlaController extends BaseController
     {
         $olaId = $args['id'];
         $docentId = $args['docentid'];
-        $result = $this->olaRepository->removeDocent($olaId, $docentId);
+        $result = $this->olaService->removeDocent($olaId, $docentId);
 
         if (!$result) {
             $return = ['Message:' => "Could not remove docent: $docentId from OLA: $olaId"];
