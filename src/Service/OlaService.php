@@ -27,7 +27,7 @@ final class OlaService
     {
         $olas = $this->olaRepository->getByOpo($id);
 
-        if (!$ola) {
+        if (!$olas) {
             return null;
         }
 
