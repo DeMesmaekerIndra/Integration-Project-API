@@ -11,10 +11,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class OpoController extends BaseController
 {
     private $opoService;
+    private $olaService;
 
     public function __construct(ContainerInterface $container)
     {
         $this->opoService = $container->get('OpoService');
+        $this->olaService = $container->get('OlaService');
     }
 
     public function get(Request $request, Response $response, $args): Response
@@ -25,11 +27,11 @@ final class OpoController extends BaseController
         $result = $this->opoService->get($id);
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
-            $result['OLAs'] = $this->olaRepository->getByOpo($id);
+            $result['OLAs'] = $this->olaService->getByOpo($id);
         }
 
         if ($this->findQsParamValue($qsParams, 'c') === 'true') {
-            $result['Coordinator'] = $this->PersponeelRepository->getByOpo($id);
+            $result['Coordinator'] = $this->PersponeelService->getByOpo($id);
         }
 
         if (!$result) {
@@ -52,13 +54,13 @@ final class OpoController extends BaseController
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
             for ($i = 0; $i < count($result); $i++) {
-                $result[$i]['OLAs'] = $this->olaRepository->getByOpo($result[$i]['Id']);
+                $result[$i]['OLAs'] = $this->olaService->getByOpo($result[$i]['Id']);
             }
         }
 
         if ($this->findQsParamValue($qsParams, 'c') === 'true') {
             for ($i = 0; $i < count($result); $i++) {
-                $result[$i]['Coordinator'] = $this->PersponeelRepository->getByOpo($result[$i]['Id']);
+                $result[$i]['Coordinator'] = $this->PersponeelService->getByOpo($result[$i]['Id']);
             }
         }
 

@@ -1,132 +1,68 @@
 <?php
 namespace App\Service;
 
-use PDO;
 use Psr\Container\ContainerInterface;
 
 final class OlaService
 {
-    private $connection;
+    private $olaRepository;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->connection = $container->get('pdo');
+        $this->olaRepository = $container->get('OlaRepository');
     }
 
-    public function get($id)
+    public function get($id): iterable
     {
-        $stmt = $this->connection->prepare("SELECT * FROM olas WHERE Id = :Id");
-        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch();
+        $opo = $this->olaRepository->get($id);
+        return $opo;
     }
 
-    public function getByOpo($id)
+    public function getByOpo($id): iterable
     {
-        $stmt = $this->connection->prepare("SELECT * FROM olas WHERE Id IN (SELECT OLA_Id_FK FROM `opos-olas` WHERE OPO_Id_FK = :Id)");
-        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll();
+        $opos = $this->olaRepository->getByOpo($id);
+        return $opos;
     }
 
-    public function getAll()
+    public function getAll(): iterable
     {
-        $stmt = $this->connection->prepare("SELECT * FROM olas");
-        $stmt->execute();
-        return $stmt->fetchAll();
+        $opos = $this->olaRepository->getAll();
+        return $opos;
     }
 
-    public function create($body)
+    public function create($body): int
     {
-        $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
-        $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
-        $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
-        $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
-        $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
-
-        if (!$stmt->execute()) {
-            return false;
-        }
-
-        $bodyId = $this->connection->lastInsertId();
-
-        return $bodyId;
+        $id = $this->olaRepository->create($body);
+        return $id;
     }
 
-    public function createUnderOpo($body, $opoId)
+    public function createUnderOpo($body, $opoId): int
     {
-        $this->connection->beginTransaction();
-        $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
-        $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
-        $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
-        $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
-        $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
-
-        if (!$stmt->execute()) {
-            return false;
-        }
-
-        $bodyId = $this->connection->lastInsertId();
-        $stmt = $this->connection->prepare("INSERT INTO `opos-olas` (OPO_Id_FK, OLA_Id_FK) VALUES (:OPO_Id_FK, :OLA_Id_FK)");
-        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
-        $stmt->bindParam(':OLA_Id_FK', $bodyId, PDO::PARAM_INT);
-
-        if (!$stmt->execute()) {
-            $this->connection->rollback();
-            return false;
-        }
-
-        $this->connection->commit();
-
-        return $bodyId;
+        $id = $this->olaRepository->createUnderOpo($body, $opoId);
+        return $id;
     }
 
-    public function update($body, $id)
+    public function update($body, $id): boolean
     {
-        $stmt = $this->connection->prepare("UPDATE olas SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur WHERE Id=:Id");
-        $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
-        $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
-        $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
-        $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
-        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
-
-        return $stmt->execute();
+        $isSuccess = $this->olaRepository->update($body, $id);
+        return $isSuccess;
     }
 
-    public function delete($id)
+    public function delete($id): boolean
     {
-        $stmt = $this->connection->prepare("DELETE FROM olas WHERE Id = :Id");
-        $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $isSuccess = $this->olaRepository->delete($id);
+        return $isSuccess;
     }
 
-    public function addDocent($olaId, $body)
+    public function addDocent($olaId, $body): boolean
     {
-        $this->connection->beginTransaction();
-
-        foreach ($body['DocentenIds'] as &$docentId) {
-            $stmt = $this->connection->prepare("INSERT INTO `olas-onderwijspersoneel` (OLA_Id_FK, Docent_Id_FK, Toewijzingsdatum) VALUES (:OLA_Id_FK, :Docent_Id_FK, :Toewijzingsdatum)");
-            $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
-            $stmt->bindParam(':Docent_Id_FK', $docentId, PDO::PARAM_STR);
-            $stmt->bindParam(':Toewijzingsdatum', $body['Toewijzingsdatum'], PDO::PARAM_STR);
-            if (!$stmt->execute()) {
-                $this->connection->rollback();
-                return false;
-            }
-        }
-
-        $this->connection->commit();
-        return true;
+        $isSuccess = $this->olaRepository->addDocent($olaId, $body);
+        return $isSuccess;
     }
 
-    public function removeDocent($olaId, $docentId)
+    public function removeDocent($olaId, $docentId): boolean
     {
-        $stmt = $this->connection->prepare("DELETE FROM `olas-onderwijspersoneel` WHERE Docent_Id_FK = :Docent_Id_FK AND OLA_Id_FK = :OLA_Id_FK");
-        $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
-        $stmt->bindParam(':Docent_Id_FK', $docentId, PDO::PARAM_STR);
-        return $stmt->execute();
+        $isSuccess = $this->olaRepository->removeDocent($olaId, $docentId);
+        return $isSuccess;
     }
 }
