@@ -15,7 +15,7 @@ final class OlaRepository
 
     public function get($id)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM OLAs WHERE Id = :Id");
+        $stmt = $this->connection->prepare("SELECT * FROM olas WHERE Id = :Id");
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch();
@@ -23,7 +23,7 @@ final class OlaRepository
 
     public function getByOpo($id)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM OLAs WHERE Id IN (SELECT OLA_Id_FK FROM `OPOs-OLAs` WHERE OPO_Id_FK = :Id)");
+        $stmt = $this->connection->prepare("SELECT * FROM olas WHERE Id IN (SELECT OLA_Id_FK FROM `opos-olas` WHERE OPO_Id_FK = :Id)");
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -31,18 +31,18 @@ final class OlaRepository
 
     public function getAll()
     {
-        $stmt = $this->connection->prepare("SELECT * FROM OLAs");
+        $stmt = $this->connection->prepare("SELECT * FROM olas");
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
     public function create($body)
     {
-        $stmt = $this->connection->prepare("INSERT INTO OLAs (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
+        $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_BOOL);
+        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
 
         if (!$stmt->execute()) {
@@ -57,11 +57,11 @@ final class OlaRepository
     public function createUnderOpo($body, $opoId)
     {
         $this->connection->beginTransaction();
-        $stmt = $this->connection->prepare("INSERT INTO OLAs (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
+        $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_BOOL);
+        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
 
         if (!$stmt->execute()) {
@@ -69,7 +69,7 @@ final class OlaRepository
         }
 
         $bodyId = $this->connection->lastInsertId();
-        $stmt = $this->connection->prepare("INSERT INTO `OPOs-OLAs` (OPO_Id_FK, OLA_Id_FK) VALUES (:OPO_Id_FK, :OLA_Id_FK)");
+        $stmt = $this->connection->prepare("INSERT INTO `opos-olas` (OPO_Id_FK, OLA_Id_FK) VALUES (:OPO_Id_FK, :OLA_Id_FK)");
         $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
         $stmt->bindParam(':OLA_Id_FK', $bodyId, PDO::PARAM_INT);
 
@@ -85,11 +85,11 @@ final class OlaRepository
 
     public function update($body, $id)
     {
-        $stmt = $this->connection->prepare("UPDATE OLAs SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur WHERE Id=:Id");
+        $stmt = $this->connection->prepare("UPDATE olas SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur WHERE Id=:Id");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_BOOL);
+        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
 
@@ -98,7 +98,7 @@ final class OlaRepository
 
     public function delete($id)
     {
-        $stmt = $this->connection->prepare("DELETE FROM OLAs WHERE Id = :Id");
+        $stmt = $this->connection->prepare("DELETE FROM olas WHERE Id = :Id");
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }

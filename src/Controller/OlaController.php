@@ -41,9 +41,7 @@ final class OlaController extends BaseController
             return $response->withStatus(400);
         }
 
-        $message = ['data' => $result];
-        $return = json_encode($message);
-        $response->getBody()->write($return);
+        $response->getBody()->write(json_encode($result));
         return $response->withStatus(200);
     }
 

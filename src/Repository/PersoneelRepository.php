@@ -65,11 +65,11 @@ final class PersoneelRepository
 
     public function update($id, $body)
     {
-        $stmt = $this->connection->prepare("UPDATE OPOs SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur, Fase_FK=:Fase_FK WHERE Id=:Id");
+        $stmt = $this->connection->prepare("UPDATE opos SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur, Fase_FK=:Fase_FK WHERE Id=:Id");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
-        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_BOOL);
+        $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
         $stmt->bindParam(':Fase_FK', $body['Fase_FK'], PDO::PARAM_INT);
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
