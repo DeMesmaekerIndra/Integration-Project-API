@@ -38,7 +38,7 @@ final class OlaService
     {
         $olas = $this->olaRepository->getAll();
 
-        if (!$ola) {
+        if (!$olas) {
             return null;
         }
 
