@@ -52,25 +52,25 @@ final class OlaService
         return (int) $id;
     }
 
-    public function update($body, $id): boolean
+    public function update($body, $id): bool
     {
         $isSuccess = $this->olaRepository->update($body, $id);
         return $isSuccess;
     }
 
-    public function delete($id): boolean
+    public function delete($id): bool
     {
         $isSuccess = $this->olaRepository->delete($id);
         return $isSuccess;
     }
 
-    public function addDocent($olaId, $body): boolean
+    public function addDocent($olaId, $body): bool
     {
         $isSuccess = $this->olaRepository->addDocent($olaId, $body);
         return $isSuccess;
     }
 
-    public function removeDocent($olaId, $docentId): boolean
+    public function removeDocent($olaId, $docentId): bool
     {
         $isSuccess = $this->olaRepository->removeDocent($olaId, $docentId);
         return $isSuccess;

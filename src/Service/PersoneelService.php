@@ -37,19 +37,19 @@ final class PersoneelService
         return $personeel;
     }
 
-    public function create($body): boolean
+    public function create($body): bool
     {
         $isSuccess = $this->personeelRepository->create($body);
         return $isSuccess;
     }
 
-    public function update($id, $body): boolean
+    public function update($id, $body): bool
     {
         $isSuccess = $this->personeelRepository->update($id, $body);
         return $isSuccess;
     }
 
-    public function delete($id): boolean
+    public function delete($id): bool
     {
         $isSuccess = $this->personeelRepository->delete($id);
         return $isSuccess;

@@ -44,37 +44,37 @@ final class OpoService
         return (int) $id;
     }
 
-    public function update($body, $id): boolean
+    public function update($body, $id): bool
     {
         $isSucces = $this->opoRepository->update($body, $id);
         return $isSucces;
     }
 
-    public function delete($id): boolean
+    public function delete($id): bool
     {
-        $isSucces = $this->opoRepository->delete($body);
+        $isSucces = $this->opoRepository->delete($id);
         return $isSucces;
     }
 
-    public function addOla($opoId, $olaId): boolean
+    public function addOla($opoId, $olaId): bool
     {
         $isSucces = $this->opoRepository->addOla($opoId, $olaId);
         return $isSucces;
     }
 
-    public function removeOla($opoId, $olaId): boolean
+    public function removeOla($opoId, $olaId): bool
     {
         $isSucces = $this->opoRepository->removeOla($opoId, $opoId);
         return $isSucces;
     }
 
-    public function addCoordinator($opoId, $coordinatorId, $body): boolean
+    public function addCoordinator($opoId, $coordinatorId, $body): bool
     {
         $isSucces = $this->opoRepository->addCoordinator($opoId, $coordinatorId, $body);
         return $isSucces;
     }
 
-    public function removeCoordinator($opoId, $coordinatorId): boolean
+    public function removeCoordinator($opoId, $coordinatorId): bool
     {
         $isSucces = $this->opoRepository->removeCoordinator($opoId, $coordinatorId);
         return $isSucces;
