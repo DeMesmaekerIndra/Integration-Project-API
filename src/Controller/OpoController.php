@@ -49,6 +49,7 @@ final class OpoController extends BaseController
     {
         $qsParams = $request->getQueryParams();
         $return = ['data' => []];
+
         $result = $this->opoService->getAll();
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
@@ -73,14 +74,16 @@ final class OpoController extends BaseController
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
+
         $resultId = $this->opoService->create($body);
 
         if (!$resultId || $resultId === 0) {
-            return $this->responseFactory->buildErrorResponse('Unable to create opo');
+            return $this->responseFactory->buildErrorResponse('Unable to create OPO');
         }
 
         $result = ['Id' => $resultId];
-        return $this->responseFactory->buildOKResponseWithDataAndMessage($result, 'Row was created');
+
+        return $this->responseFactory->buildOKResponseWithDataAndMessage($result, 'OPO created');
     }
 
     public function update(Request $request, Response $response, $args): Response
@@ -90,10 +93,10 @@ final class OpoController extends BaseController
         $result = $this->opoService->update($body, $id);
 
         if (!$result) {
-            return $this->responseFactory->buildErrorResponse("Opo: $id was not updated");
+            return $this->responseFactory->buildErrorResponse("OPO: $id was not updated");
         }
 
-        return $this->responseFactory->buildOKResponseWithMessage("Opo: $id was updated.");
+        return $this->responseFactory->buildOKResponseWithMessage("OPO: $id was updated.");
     }
 
     public function delete(Request $request, Response $response, $args): Response
@@ -102,10 +105,10 @@ final class OpoController extends BaseController
         $result = $this->opoService->delete($id);
 
         if (!$result) {
-            return $this->responseFactory->buildErrorResponse("Opo: $id was not deleted");
+            return $this->responseFactory->buildErrorResponse("OPO: $id was not deleted");
         }
 
-        return $this->responseFactory->buildOKResponseWithMessage("Opo: $id was deleted.");
+        return $this->responseFactory->buildOKResponseWithMessage("OPO: $id was deleted.");
     }
 
     public function addOla(Request $request, Response $response, $args): Response
