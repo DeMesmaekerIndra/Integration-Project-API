@@ -159,6 +159,5 @@ final class OpoController extends BaseController
         }
 
         return $this->responseFactory->buildOKResponseWithMessage("Coordinator: $coordinatorId was unlinked from OPO: $opoId");
-
     }
 }
