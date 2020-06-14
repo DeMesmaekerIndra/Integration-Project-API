@@ -23,23 +23,21 @@ final class PersoneelController extends BaseController
         $result = $this->personeelService->get($id);
 
         if (!$result) {
-            $return = ['Message:' => 'Could not find employee with id: $id'];
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Could not find employee with id: $id");
         }
 
-        $message = ['data' => $result];
-        $return = json_encode($message);
-        $response->getBody()->write($return);
-        return $response->withStatus(200);
+        return $this->responseFactory->buildOKResponse($result);
     }
 
     public function getAll(Request $request, Response $response, $args): Response
     {
         $result = $this->personeelService->getAll();
-        $return = ['data' => $result];
-        $response->getBody()->write(json_encode($return));
-        return $response->withStatus(200);
+
+        if (!$result) {
+            return $this->responseFactory->buildErrorResponse('Could not retrieve employees');
+        }
+
+        return $this->responseFactory->buildOKResponse($result);
     }
 
     public function create(Request $request, Response $response): Response
@@ -48,14 +46,12 @@ final class PersoneelController extends BaseController
         $resultId = $this->personeelService->create($body);
 
         if (!$resultId || $resultId === 0) {
-            $return = ['Message:' => 'Row was not created'];
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse('Could not create employee');
         }
 
-        $return = ['Message:' => 'Row was created', 'data' => $resultId];
-        $response->getBody()->write(json_encode($return));
-        return $response->withStatus(200);
+        $result = ['Id' => $resultId];
+
+        return $this->responseFactory->buildOKResponseWithDataAndMessage($result, 'Employee created');
     }
 
     public function update(Request $request, Response $response, $args): Response
@@ -65,15 +61,10 @@ final class PersoneelController extends BaseController
         $result = $this->personeelService->update($id, $body);
 
         if (!$result) {
-            $return = array('Message:' => 'Row was not updated');
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Employee: $id was not updated");
         }
 
-        $return = array('Message:' => 'Row was updated');
-        $response->getBody()->write(json_encode($return));
-
-        return $response->withStatus(200);
+        return $this->responseFactory->buildOKResponseWithMessage("Employee: $id was updated");
     }
 
     public function delete(Request $request, Response $response, $args): Response
@@ -82,13 +73,9 @@ final class PersoneelController extends BaseController
         $result = $this->personeelService->delete($id);
 
         if (!$result) {
-            $return = ['Message:' => 'Row was not deleted'];
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Employee: $id was not deleted");
         }
 
-        $return = ['Message:' => 'Row was deleted'];
-        $response->getBody()->write(json_encode($return));
-        return $response->withStatus(200);
+        return $this->responseFactory->buildOKResponseWithMessage("Employee: $id was deleted");
     }
 }
