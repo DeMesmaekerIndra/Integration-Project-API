@@ -36,7 +36,7 @@ final class OpoService
     public function create($body): int
     {
         $id = $this->opoRepository->create($body);
-        return $id;
+        return (int) $id;
     }
 
     public function update($body, $id): boolean

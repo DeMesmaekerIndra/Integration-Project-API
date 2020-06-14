@@ -39,7 +39,7 @@ final class OlaService
     public function createUnderOpo($body, $opoId): int
     {
         $id = $this->olaRepository->createUnderOpo($body, $opoId);
-        return $id;
+        return (int) $id;
     }
 
     public function update($body, $id): boolean
