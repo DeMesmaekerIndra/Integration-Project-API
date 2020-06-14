@@ -13,25 +13,25 @@ final class PersoneelService
         $this->personeelRepository = $container->get('PersoneelRepository');
     }
 
-    public function get($id): iterable
+    public function get($id): ?iterable
     {
         $personeel = $this->personeelRepository->get($id);
         return $personeel;
     }
 
-    public function getAll(): iterable
+    public function getAll(): ?iterable
     {
         $personeel = $this->personeelRepository->getAll();
         return $personeel;
     }
 
-    public function getByOpo($id): iterable
+    public function getByOpo($id): ?iterable
     {
         $personeel = $this->personeelRepository->getByOpo($id);
         return $personeel;
     }
 
-    public function getByOla($id): iterable
+    public function getByOla($id): ?iterable
     {
         $personeel = $this->personeelRepository->getByOla($id);
         return $personeel;

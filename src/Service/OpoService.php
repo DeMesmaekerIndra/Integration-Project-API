@@ -15,19 +15,19 @@ final class OpoService
         $this->opoRepository = $container->get('OpoRepository');
     }
 
-    public function get($id): iterable
+    public function get($id): ?iterable
     {
         $opo = $this->opoRepository->get($id);
         return $opo;
     }
 
-    public function getByOla($id): iterable
+    public function getByOla($id): ?iterable
     {
         $opos = $this->opoRepository->getByOla($id);
         return $opos;
     }
 
-    public function getAll(): iterable
+    public function getAll(): ?iterable
     {
         $opos = $this->opoRepository->getAll();
         return $opos;
