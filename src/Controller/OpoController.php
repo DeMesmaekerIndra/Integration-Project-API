@@ -12,11 +12,14 @@ final class OpoController extends BaseController
 {
     private $opoService;
     private $olaService;
+    private $personeelService;
 
     public function __construct(ContainerInterface $container)
     {
         $this->opoService = $container->get('OpoService');
         $this->olaService = $container->get('OlaService');
+        $this->personeelService = $container->get('PersoneelService');
+
     }
 
     public function get(Request $request, Response $response, $args): Response
@@ -31,7 +34,7 @@ final class OpoController extends BaseController
         }
 
         if ($this->findQsParamValue($qsParams, 'c') === 'true') {
-            $result['Coordinator'] = $this->PersponeelService->getByOpo($id);
+            $result['Coordinator'] = $this->personeelService->getByOpo($id);
         }
 
         if (!$result) {
@@ -60,7 +63,7 @@ final class OpoController extends BaseController
 
         if ($this->findQsParamValue($qsParams, 'c') === 'true') {
             for ($i = 0; $i < count($result); $i++) {
-                $result[$i]['Coordinator'] = $this->PersponeelService->getByOpo($result[$i]['Id']);
+                $result[$i]['Coordinator'] = $this->personeelService->getByOpo($result[$i]['Id']);
             }
         }
 

@@ -14,20 +14,20 @@ final class OlaService
 
     public function get($id): iterable
     {
-        $opo = $this->olaRepository->get($id);
-        return $opo;
+        $ola = $this->olaRepository->get($id);
+        return $ola;
     }
 
     public function getByOpo($id): iterable
     {
-        $opos = $this->olaRepository->getByOpo($id);
-        return $opos;
+        $olas = $this->olaRepository->getByOpo($id);
+        return $olas;
     }
 
     public function getAll(): iterable
     {
-        $opos = $this->olaRepository->getAll();
-        return $opos;
+        $olas = $this->olaRepository->getAll();
+        return $olas;
     }
 
     public function create($body): int
