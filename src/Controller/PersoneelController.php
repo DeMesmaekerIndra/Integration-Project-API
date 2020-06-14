@@ -11,10 +11,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class PersoneelController extends BaseController
 {
     private $personeelService;
+    private $responseFactory;
 
     public function __construct(ContainerInterface $container)
     {
         $this->personeelService = $container->get('PersoneelService');
+        $this->responseFactory = $container->get('ResponseFactory');
     }
 
     public function get(Request $request, Response $response, $args): Response
