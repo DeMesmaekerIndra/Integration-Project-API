@@ -2,9 +2,9 @@
 
 declare (strict_types = 1);
 
-use App\Repository\OlaRepository as OlaRepository;
-use App\Repository\OpoRepository as OpoRepository;
-use App\Repository\PersoneelRepository as PersoneelRepository;
+use App\Repository\OlaRepository;
+use App\Repository\OpoRepository;
+use App\Repository\PersoneelRepository;
 use Pimple\Container;
 use Pimple\Psr11\Container as Psr11Container;
 

@@ -10,15 +10,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class OpoController extends BaseController
 {
-    private $opoRepository;
-    private $olaRepository;
-    private $PersponeelRepository;
+    private $opoService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->opoRepository = $container->get('OpoRepository');
-        $this->olaRepository = $container->get('OlaRepository');
-        $this->PersponeelRepository = $container->get('PersoneelRepository');
+        $this->opoService = $container->get('OpoService');
     }
 
     public function get(Request $request, Response $response, $args): Response
@@ -26,7 +22,7 @@ final class OpoController extends BaseController
         $qsParams = $request->getQueryParams();
         $id = $args['id'];
 
-        $result = $this->opoRepository->get($id);
+        $result = $this->opoService->get($id);
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
             $result['OLAs'] = $this->olaRepository->getByOpo($id);
@@ -52,7 +48,7 @@ final class OpoController extends BaseController
     {
         $qsParams = $request->getQueryParams();
         $return = ['data' => []];
-        $result = $this->opoRepository->getAll();
+        $result = $this->opoService->getAll();
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
             for ($i = 0; $i < count($result); $i++) {
@@ -80,7 +76,7 @@ final class OpoController extends BaseController
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $result = $this->opoRepository->create($body);
+        $result = $this->opoService->create($body);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not created');
@@ -97,7 +93,7 @@ final class OpoController extends BaseController
     public function update(Request $request, Response $response, $args): Response
     {
         $body = $request->getParsedBody();
-        $result = $this->opoRepository->update($body, $args['id']);
+        $result = $this->opoService->update($body, $args['id']);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not updated');
@@ -113,7 +109,7 @@ final class OpoController extends BaseController
 
     public function delete(Request $request, Response $response, $args): Response
     {
-        $result = $this->opoRepository->delete($args['id']);
+        $result = $this->opoService->delete($args['id']);
 
         if (!$result) {
             $return = array('Message:' => 'Row was not deleted');
@@ -131,7 +127,7 @@ final class OpoController extends BaseController
     {
         $opoId = $args['id'];
         $olaId = $args['olaid'];
-        $result = $this->opoRepository->addOla($opoId, $olaId);
+        $result = $this->opoService->addOla($opoId, $olaId);
 
         if (!$result) {
             $return = array('Message:' => "Could not link OLA: $olaId with OPO: $opoId");
@@ -150,7 +146,7 @@ final class OpoController extends BaseController
     {
         $opoId = $args['id'];
         $olaId = $args['olaid'];
-        $result = $this->opoRepository->removeOla($opoId, $olaId);
+        $result = $this->opoService->removeOla($opoId, $olaId);
 
         if (!$result) {
             $return = array('Message:' => "Could remove OLA: $olaId from OPO: $opoId");
@@ -170,7 +166,7 @@ final class OpoController extends BaseController
         $opoId = $args['id'];
         $coordinatorId = $args['coordinatorid'];
         $body = $request->getParsedBody();
-        $result = $this->opoRepository->addCoordinator($opoId, $coordinatorId, $body);
+        $result = $this->opoService->addCoordinator($opoId, $coordinatorId, $body);
 
         if (!$result) {
             $return = ['Message:' => "Could not link coordinator: $coordinatorId with OPO: $opoId"];
@@ -188,7 +184,7 @@ final class OpoController extends BaseController
     {
         $opoId = $args['id'];
         $coordinatorId = $args['coordinatorid'];
-        $result = $this->opoRepository->removeCoordinator($opoId, $coordinatorId);
+        $result = $this->opoService->removeCoordinator($opoId, $coordinatorId);
 
         if (!$result) {
             $return = ['Message:' => "Could not remove coordinator: $coordinatorId from OPO: $opoId"];
