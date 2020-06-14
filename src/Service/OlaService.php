@@ -12,19 +12,19 @@ final class OlaService
         $this->olaRepository = $container->get('OlaRepository');
     }
 
-    public function get($id): iterable
+    public function get($id): ?iterable
     {
         $ola = $this->olaRepository->get($id);
         return $ola;
     }
 
-    public function getByOpo($id): iterable
+    public function getByOpo($id): ?iterable
     {
         $olas = $this->olaRepository->getByOpo($id);
         return $olas;
     }
 
-    public function getAll(): iterable
+    public function getAll(): ?iterable
     {
         $olas = $this->olaRepository->getAll();
         return $olas;
@@ -33,12 +33,22 @@ final class OlaService
     public function create($body): int
     {
         $id = $this->olaRepository->create($body);
-        return $id;
+
+        if (!$id) {
+            $id = 0;
+        }
+
+        return (int) $id;
     }
 
     public function createUnderOpo($body, $opoId): int
     {
         $id = $this->olaRepository->createUnderOpo($body, $opoId);
+
+        if (!$id) {
+            $id = 0;
+        }
+
         return (int) $id;
     }
 

@@ -36,6 +36,11 @@ final class OpoService
     public function create($body): int
     {
         $id = $this->opoRepository->create($body);
+
+        if (!$id) {
+            $id = 0;
+        }
+
         return (int) $id;
     }
 

@@ -37,7 +37,7 @@ final class OpoController extends BaseController
         }
 
         if (!$result) {
-            $return = ['Message:' => "Could not find OPO with id: $id"];
+            $return = ['Message:' => 'Could not find OPO with id: $id'];
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
@@ -80,15 +80,15 @@ final class OpoController extends BaseController
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $result = $this->opoService->create($body);
+        $resultId = $this->opoService->create($body);
 
-        if (!$result) {
+        if (!$resultId || $resultId === 0) {
             $return = array('Message:' => 'Row was not created');
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
 
-        $return = array('Message:' => 'Row was created', 'data' => ['Id' => $result]);
+        $return = array('Message:' => 'Row was created', 'data' => ['Id' => $resultId]);
         $response->getBody()->write(json_encode($return));
 
         return $response->withStatus(200);
@@ -134,12 +134,12 @@ final class OpoController extends BaseController
         $result = $this->opoService->addOla($opoId, $olaId);
 
         if (!$result) {
-            $return = array('Message:' => "Could not link OLA: $olaId with OPO: $opoId");
+            $return = array('Message:' => 'Could not link OLA: $olaId with OPO: $opoId');
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
 
-        $return = array('Message:' => "OLA: $olaId was linked to OPO: $opoId");
+        $return = array('Message:' => 'OLA: $olaId was linked to OPO: $opoId');
         $response->getBody()->write(json_encode($return));
 
         return $response->withStatus(200);
@@ -153,12 +153,12 @@ final class OpoController extends BaseController
         $result = $this->opoService->removeOla($opoId, $olaId);
 
         if (!$result) {
-            $return = array('Message:' => "Could remove OLA: $olaId from OPO: $opoId");
+            $return = array('Message:' => 'Could remove OLA: $olaId from OPO: $opoId');
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
 
-        $return = array('Message:' => "OLA: $olaId was removed from OPO: $opoId");
+        $return = array('Message:' => 'OLA: $olaId was removed from OPO: $opoId');
         $response->getBody()->write(json_encode($return));
 
         return $response->withStatus(200);
@@ -173,12 +173,12 @@ final class OpoController extends BaseController
         $result = $this->opoService->addCoordinator($opoId, $coordinatorId, $body);
 
         if (!$result) {
-            $return = ['Message:' => "Could not link coordinator: $coordinatorId with OPO: $opoId"];
+            $return = ['Message:' => 'Could not link coordinator: $coordinatorId with OPO: $opoId'];
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
 
-        $return = ['Message:' => "Coordinator: $coordinatorId was linked to OPO: $opoId"];
+        $return = ['Message:' => 'Coordinator: $coordinatorId was linked to OPO: $opoId'];
         $response->getBody()->write(json_encode($return));
 
         return $response->withStatus(200);
@@ -191,12 +191,12 @@ final class OpoController extends BaseController
         $result = $this->opoService->removeCoordinator($opoId, $coordinatorId);
 
         if (!$result) {
-            $return = ['Message:' => "Could not remove coordinator: $coordinatorId from OPO: $opoId"];
+            $return = ['Message:' => 'Could not remove coordinator: $coordinatorId from OPO: $opoId'];
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
 
-        $return = ['Message:' => "Coordinator: $coordinatorId was removed from OPO: $opoId"];
+        $return = ['Message:' => 'Coordinator: $coordinatorId was removed from OPO: $opoId'];
         $response->getBody()->write(json_encode($return));
 
         return $response->withStatus(200);

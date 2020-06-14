@@ -23,7 +23,7 @@ final class PersoneelController extends BaseController
         $result = $this->personeelService->get($id);
 
         if (!$result) {
-            $return = ['Message:' => "Could not find employee with id: $id"];
+            $return = ['Message:' => 'Could not find employee with id: $id'];
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
@@ -45,15 +45,15 @@ final class PersoneelController extends BaseController
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $result = $this->personeelService->create($body);
+        $resultId = $this->personeelService->create($body);
 
-        if (!$result) {
+        if (!$resultId || $resultId === 0) {
             $return = ['Message:' => 'Row was not created'];
             $response->getBody()->write(json_encode($return));
             return $response->withStatus(400);
         }
 
-        $return = ['Message:' => 'Row was created'];
+        $return = ['Message:' => 'Row was created', 'data' => $resultId];
         $response->getBody()->write(json_encode($return));
         return $response->withStatus(200);
     }
