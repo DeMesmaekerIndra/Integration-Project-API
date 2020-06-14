@@ -11,7 +11,9 @@ final class ResponseFactory
     public function buildOKResponse($data): Response
     {
         $response = new Response();
-        $body = json_encode(['data' => $data]);
+
+        $parsedBody = getJsonObjFromResult($data);
+        $body = json_encode(['data' => $parsedBody]);
 
         $response->getBody()->write($body);
         $response->withProtocolVersion('2.0');
@@ -22,7 +24,7 @@ final class ResponseFactory
     public function buildOKResponseWithMessage($message): Response
     {
         $response = new Response();
-        $body = json_encode(['data' => $data]);
+        $body = json_encode(['message' => $message]);
 
         $response->getBody()->write($body);
         $response->withProtocolVersion('2.0');
@@ -33,7 +35,9 @@ final class ResponseFactory
     public function buildOKResponseWithDataAndMessage($data, $message): Response
     {
         $response = new Response();
-        $body = json_encode(['data' => $data, 'message' => $message]);
+
+        $parsedBody = getJsonObjFromResult($data);
+        $body = json_encode(['data' => $parsedBody, 'message' => $message]);
 
         $response->getBody()->write($body);
         $response->withProtocolVersion('2.0');
@@ -71,10 +75,44 @@ final class ResponseFactory
     public function buildNotAllowedResponse(): Response
     {
         $response = new Response();
-        $body = ['Message' => 'You are not authorized to access to access this endpoint or data!'];
-        $response->getBody()->write(json_encode($body));
+        $body = json_encode(['Message' => 'You are not authorized to access to access this endpoint or data!']);
+        $response->getBody()->write($body);
         $response->withProtocolVersion('2.0');
         $response->withStatus(405);
         return $response;
+    }
+
+    private function getJsonObjFromResult(&$result)
+    {
+        $fixed = array();
+
+        $typeArray = array(
+            MYSQLI_TYPE_TINY, MYSQLI_TYPE_SHORT, MYSQLI_TYPE_INT24,
+            MYSQLI_TYPE_LONG, MYSQLI_TYPE_LONGLONG,
+            MYSQLI_TYPE_DECIMAL,
+            MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE);
+        $fieldList = array();
+
+        while ($info = $result->fetch_field()) {
+            $fieldList[] = $info;
+        }
+
+        while ($row = $result->fetch_assoc()) {
+            $fixedRow = array();
+            $teller = 0;
+
+            foreach ($row as $key => $value) {
+
+                if (in_array($fieldList[$teller]->type, $typeArray)) {
+                    $fixedRow[$key] = 0 + $value;
+                } else {
+                    $fixedRow[$key] = $value;
+                }
+                $teller++;
+            }
+            $fixed[] = $fixedRow;
+        }
+
+        return $fixed;
     }
 }
