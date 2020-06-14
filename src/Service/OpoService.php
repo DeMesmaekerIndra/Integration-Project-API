@@ -18,18 +18,33 @@ final class OpoService
     public function get($id): ?iterable
     {
         $opo = $this->opoRepository->get($id);
+
+        if (!$opo) {
+            return null;
+        }
+
         return $opo;
     }
 
     public function getByOla($id): ?iterable
     {
         $opos = $this->opoRepository->getByOla($id);
+
+        if (!$opos) {
+            return null;
+        }
+
         return $opos;
     }
 
     public function getAll(): ?iterable
     {
         $opos = $this->opoRepository->getAll();
+
+        if (!$opos) {
+            return null;
+        }
+
         return $opos;
     }
 

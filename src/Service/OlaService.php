@@ -15,18 +15,33 @@ final class OlaService
     public function get($id): ?iterable
     {
         $ola = $this->olaRepository->get($id);
+
+        if (!$ola) {
+            return null;
+        }
+
         return $ola;
     }
 
     public function getByOpo($id): ?iterable
     {
         $olas = $this->olaRepository->getByOpo($id);
+
+        if (!$ola) {
+            return null;
+        }
+
         return $olas;
     }
 
     public function getAll(): ?iterable
     {
         $olas = $this->olaRepository->getAll();
+
+        if (!$ola) {
+            return null;
+        }
+
         return $olas;
     }
 

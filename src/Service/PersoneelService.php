@@ -16,24 +16,44 @@ final class PersoneelService
     public function get($id): ?iterable
     {
         $personeel = $this->personeelRepository->get($id);
+
+        if (!$personeel) {
+            return null;
+        }
+
         return $personeel;
     }
 
     public function getAll(): ?iterable
     {
         $personeel = $this->personeelRepository->getAll();
+
+        if (!$personeel) {
+            return null;
+        }
+
         return $personeel;
     }
 
     public function getByOpo($id): ?iterable
     {
         $personeel = $this->personeelRepository->getByOpo($id);
+
+        if (!$personeel) {
+            return null;
+        }
+
         return $personeel;
     }
 
     public function getByOla($id): ?iterable
     {
         $personeel = $this->personeelRepository->getByOla($id);
+
+        if (!$personeel) {
+            return null;
+        }
+
         return $personeel;
     }
 

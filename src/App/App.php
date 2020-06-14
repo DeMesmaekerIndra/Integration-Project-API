@@ -59,6 +59,7 @@ final class App
         require __DIR__ . '/Dependencies.php';
         require __DIR__ . '/Repositories.php';
         require __DIR__ . '/Services.php';
+        require __DIR__ . '/Factories.php';
 
         // Catch all 404 not found
         $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response): Response {

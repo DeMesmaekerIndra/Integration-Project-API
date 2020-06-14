@@ -13,12 +13,14 @@ final class OpoController extends BaseController
     private $opoService;
     private $olaService;
     private $personeelService;
+    private $responseFactory;
 
     public function __construct(ContainerInterface $container)
     {
         $this->opoService = $container->get('OpoService');
         $this->olaService = $container->get('OlaService');
         $this->personeelService = $container->get('PersoneelService');
+        $this->responseFactory = $container->get('ResponseFactory');
     }
 
     public function get(Request $request, Response $response, $args): Response
@@ -37,15 +39,10 @@ final class OpoController extends BaseController
         }
 
         if (!$result) {
-            $return = ['Message:' => 'Could not find OPO with id: $id'];
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Could not find OPO with id: $id");
         }
 
-        $message = ['data' => $result];
-        $return = json_encode($message);
-        $response->getBody()->write($return);
-        return $response->withStatus(200);
+        return $this->responseFactory->buildOKResponse($result);
     }
 
     public function getAll(Request $request, Response $response, $args): Response
@@ -67,14 +64,10 @@ final class OpoController extends BaseController
         }
 
         if (!$result) {
-            $return = ['Message:' => 'Could not retrieve OPOs'];
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse('Could not retrieve OPOs');
         }
 
-        $return = ['data' => $result];
-        $response->getBody()->write(json_encode($return));
-        return $response->withStatus(200);
+        return $this->responseFactory->buildOKResponse($result);
     }
 
     public function create(Request $request, Response $response): Response
@@ -83,48 +76,36 @@ final class OpoController extends BaseController
         $resultId = $this->opoService->create($body);
 
         if (!$resultId || $resultId === 0) {
-            $return = array('Message:' => 'Row was not created');
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse('Unable to create opo');
         }
 
-        $return = array('Message:' => 'Row was created', 'data' => ['Id' => $resultId]);
-        $response->getBody()->write(json_encode($return));
-
-        return $response->withStatus(200);
+        $result = ['Id' => $resultId];
+        return $this->responseFactory->buildOKResponseWithDataAndMessage($result, 'Row was created');
     }
 
     public function update(Request $request, Response $response, $args): Response
     {
+        $id = $args['id'];
         $body = $request->getParsedBody();
-        $result = $this->opoService->update($body, $args['id']);
+        $result = $this->opoService->update($body, $id);
 
         if (!$result) {
-            $return = array('Message:' => 'Row was not updated');
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Opo: $id was not updated");
         }
 
-        $return = array('Message:' => 'Row was updated');
-        $response->getBody()->write(json_encode($return));
-
-        return $response->withStatus(200);
+        return $this->responseFactory->buildOKResponseWithMessage("Opo: $id was updated.");
     }
 
     public function delete(Request $request, Response $response, $args): Response
     {
-        $result = $this->opoService->delete($args['id']);
+        $id = $args['id'];
+        $result = $this->opoService->delete($id);
 
         if (!$result) {
-            $return = array('Message:' => 'Row was not deleted');
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Opo: $id was not deleted");
         }
 
-        $return = array('Message:' => 'Row was deleted');
-        $response->getBody()->write(json_encode($return));
-
-        return $response->withStatus(200);
+        return $this->responseFactory->buildOKResponseWithMessage("Opo: $id was deleted.");
     }
 
     public function addOla(Request $request, Response $response, $args): Response
@@ -134,16 +115,10 @@ final class OpoController extends BaseController
         $result = $this->opoService->addOla($opoId, $olaId);
 
         if (!$result) {
-            $return = array('Message:' => 'Could not link OLA: $olaId with OPO: $opoId');
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Could not link OLA: $olaId to OPO: $opoId");
         }
 
-        $return = array('Message:' => 'OLA: $olaId was linked to OPO: $opoId');
-        $response->getBody()->write(json_encode($return));
-
-        return $response->withStatus(200);
-
+        return $this->responseFactory->buildOKResponseWithMessage("OLA: $olaId was linked to OPO: $opoId");
     }
 
     public function removeOla(Request $request, Response $response, $args): Response
@@ -153,16 +128,10 @@ final class OpoController extends BaseController
         $result = $this->opoService->removeOla($opoId, $olaId);
 
         if (!$result) {
-            $return = array('Message:' => 'Could remove OLA: $olaId from OPO: $opoId');
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Could not unlink OLA: $olaId from OPO: $opoId");
         }
 
-        $return = array('Message:' => 'OLA: $olaId was removed from OPO: $opoId');
-        $response->getBody()->write(json_encode($return));
-
-        return $response->withStatus(200);
-
+        return $this->responseFactory->buildOKResponseWithMessage("OLA: $olaId was unlinked from OPO: $opoId");
     }
 
     public function addCoordinator(Request $request, Response $response, $args): Response
@@ -173,15 +142,10 @@ final class OpoController extends BaseController
         $result = $this->opoService->addCoordinator($opoId, $coordinatorId, $body);
 
         if (!$result) {
-            $return = ['Message:' => 'Could not link coordinator: $coordinatorId with OPO: $opoId'];
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Could not link coordinator: $coordinatorId to OPO: $opoId");
         }
 
-        $return = ['Message:' => 'Coordinator: $coordinatorId was linked to OPO: $opoId'];
-        $response->getBody()->write(json_encode($return));
-
-        return $response->withStatus(200);
+        return $this->responseFactory->buildOKResponseWithMessage("Coordinator: $coordinatorId was linked to OPO: $opoId");
     }
 
     public function removeCoordinator(Request $request, Response $response, $args): Response
@@ -191,14 +155,10 @@ final class OpoController extends BaseController
         $result = $this->opoService->removeCoordinator($opoId, $coordinatorId);
 
         if (!$result) {
-            $return = ['Message:' => 'Could not remove coordinator: $coordinatorId from OPO: $opoId'];
-            $response->getBody()->write(json_encode($return));
-            return $response->withStatus(400);
+            return $this->responseFactory->buildErrorResponse("Could not unlink coordinator: $coordinatorId from OPO: $opoId");
         }
 
-        $return = ['Message:' => 'Coordinator: $coordinatorId was removed from OPO: $opoId'];
-        $response->getBody()->write(json_encode($return));
+        return $this->responseFactory->buildOKResponseWithMessage("Coordinator: $coordinatorId was unlinked from OPO: $opoId");
 
-        return $response->withStatus(200);
     }
 }
