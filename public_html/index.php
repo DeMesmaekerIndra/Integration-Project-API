@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 mb_language('uni');
 mb_internal_encoding('UTF-8');
