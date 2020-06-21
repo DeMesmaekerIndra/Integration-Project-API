@@ -64,7 +64,7 @@ final class App
         require __DIR__ . '/Factories.php';
 
         // Catch all 404 not found
-        $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'], '/{routes:.+}', function ($request, $response): Response {
+        $app->map(['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH', 'LINK', 'UNLINK', 'COPY', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'], '/{routes:.+}', function ($request, $response): Response {
             throw new HttpNotFoundException($request);
         });
 
