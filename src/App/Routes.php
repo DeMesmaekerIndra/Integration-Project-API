@@ -26,6 +26,11 @@ $app->group('/opo', function (RouteCollectorproxy $opoGroup) {
         $opoIdGroup->put('/ola/{olaid:[0-9]+}', 'App\Controller\OpoController:addOla'); //Add existing OLA to existing OPO
         $opoIdGroup->delete('/ola/{olaid:[0-9]+}', 'App\Controller\OpoController:removeOla'); //remove OLA from OPO
 
+        $opoIdGroup->put('/volgtijdelijkheid', 'App\Controller\OpoController:addConditionalOpo')
+            ->add(new ValidateRequestMiddleware(['ConditionalIds']));
+
+        $opoIdGroup->delete('/volgtijdelijkheid', 'App\Controller\OpoController:removeConditionalOpo')
+            ->add(new ValidateRequestMiddleware(['ConditionalIds']));
     });
 });
 

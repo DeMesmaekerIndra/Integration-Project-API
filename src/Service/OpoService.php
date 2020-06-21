@@ -94,4 +94,10 @@ final class OpoService
         $isSucces = $this->opoRepository->removeCoordinator($opoId, $coordinatorId);
         return $isSucces;
     }
+
+    public function addConditionalOpo($opoId, $body): bool
+    {
+        $isSucces = $this->opoRepository->addConditionalOpo($opoId, $body);
+        return $isSucces;
+    }
 }

@@ -44,7 +44,7 @@ final class App
         //How are errors displayed
         $displayError = filter_var($_SERVER['DISPLAY_ERROR_DETAILS'], FILTER_VALIDATE_BOOLEAN);
         $errorMiddleware = $app->addErrorMiddleware($displayError, true, true);
-        $errorHandler = $errorMiddleware->getDefaultErrorHandler()->forceContentType('application/json');
+        $errorMiddleware->getDefaultErrorHandler()->forceContentType('application/json');
 
         //Set up middleware to define headers
         $app->add(function ($request, $handler) {
@@ -65,7 +65,7 @@ final class App
 
         // Catch all 404 not found
         $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response): Response {
-            throw new HttpNotFoundException();
+            throw new HttpNotFoundException($request);
         });
 
         return $app;

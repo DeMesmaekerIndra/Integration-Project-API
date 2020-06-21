@@ -163,4 +163,32 @@ final class OpoController extends BaseController
 
         return $this->responseFactory->buildOKResponseWithMessage("Coordinator: $coordinatorId was unlinked from OPO: $opoId");
     }
+
+    public function addConditionalOpo(Request $request, Response $response, $args): Response
+    {
+        $opoId = $args['id'];
+        $body = $request->getParsedBody();
+
+        $result = $this->opoService->addConditionalOpo($opoId, $body);
+
+        if (!$result) {
+            return $this->responseFactory->buildErrorResponse("Could not link the conditional OPO(s) to OPO: $opoId");
+        }
+
+        return $this->responseFactory->buildOKResponseWithMessage("Linked the conditional OPO(s) to OPO: $opoId");
+    }
+
+    public function removeConditionalOpo(Request $request, Response $response, $args): Response
+    {
+        $opoId = $args['id'];
+        $body = $request->getParsedBody();
+
+        $result = $this->opoService->addConditionalOpo($opoId, $body);
+
+        if (!$result) {
+            return $this->responseFactory->buildErrorResponse("Could not unlink the conditional OPO(s) to OPO: $opoId");
+        }
+
+        return $this->responseFactory->buildOKResponseWithMessage("Unlinked the conditional OPO(s) to OPO: $opoId");
+    }
 }

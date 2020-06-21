@@ -108,4 +108,22 @@ final class OpoRepository
         $stmt->bindParam(':Coordinator_Id_FK', $coordinatorId, PDO::PARAM_STR);
         return $stmt->execute();
     }
+
+    public function addConditionalOpo($opoId, $body)
+    {
+        $this->connection->beginTransaction();
+
+        foreach ($body['ConditionalIds'] as &$conditionalId) {
+            $stmt = $this->connection->prepare("INSERT INTO `volgtijdelijkheden` (OPO_Id, Voorwaarde_OPO_Id) VALUES (:OPO_Id, :Voorwaarde_OPO_Id)");
+            $stmt->bindParam(':OPO_Id', $opoId, PDO::PARAM_INT);
+            $stmt->bindParam(':Voorwaarde_OPO_Id', $conditionalId, PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $this->connection->rollback();
+                return false;
+            }
+        }
+
+        $this->connection->commit();
+        return true;
+    }
 }
