@@ -53,7 +53,7 @@ final class PersoneelController extends BaseController
 
         $result = ['Id' => $resultId];
 
-        return $this->responseFactory->buildOKResponseWithDataAndMessage($result, 'Employee created');
+        return $this->responseFactory->buildOKResponseWithMessage('Employee created');
     }
 
     public function update(Request $request, Response $response, $args): Response

@@ -22,7 +22,7 @@ final class ResponseFactory
     public function buildOKResponseWithMessage($message): Response
     {
         $response = new Response();
-        $body = json_encode(['data' => $message]);
+        $body = json_encode(['message' => $message]);
 
         $response->getBody()->write($body);
         $response->withProtocolVersion('2.0');
