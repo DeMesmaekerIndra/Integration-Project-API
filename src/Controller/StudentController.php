@@ -8,24 +8,24 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-final class PersoneelController extends BaseController
+final class StudentController extends BaseController
 {
-    private $personeelService;
+    private $studentService;
     private $responseFactory;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->personeelService = $container->get('PersoneelService');
+        $this->studentService = $container->get('StudentService');
         $this->responseFactory = $container->get('ResponseFactory');
     }
 
     public function get(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
-        $result = $this->personeelService->get($id);
+        $result = $this->studentService->get($id);
 
         if (!$result) {
-            return $this->responseFactory->buildErrorResponse("Could not find employee with id: $id");
+            return $this->responseFactory->buildErrorResponse("Could not find student with id: $id");
         }
 
         return $this->responseFactory->buildOKResponse($result);
@@ -33,10 +33,10 @@ final class PersoneelController extends BaseController
 
     public function getAll(Request $request, Response $response, $args): Response
     {
-        $result = $this->personeelService->getAll();
+        $result = $this->studentService->getAll();
 
         if (!$result) {
-            return $this->responseFactory->buildErrorResponse('Could not retrieve employees');
+            return $this->responseFactory->buildErrorResponse('Could not retrieve students');
         }
 
         return $this->responseFactory->buildOKResponse($result);
@@ -45,37 +45,37 @@ final class PersoneelController extends BaseController
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $resultId = $this->personeelService->create($body);
+        $resultId = $this->studentService->create($body);
 
         if (!$resultId || $resultId === 0) {
-            return $this->responseFactory->buildErrorResponse('Could not create employee');
+            return $this->responseFactory->buildErrorResponse('Could not create student');
         }
 
-        return $this->responseFactory->buildOKResponseWithMessage('Employee created');
+        return $this->responseFactory->buildOKResponseWithMessage('Student created');
     }
 
     public function update(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
         $body = $request->getParsedBody();
-        $result = $this->personeelService->update($id, $body);
+        $result = $this->studentService->update($id, $body);
 
         if (!$result) {
-            return $this->responseFactory->buildErrorResponse("Employee: $id was not updated");
+            return $this->responseFactory->buildErrorResponse("Student: $id was not updated");
         }
 
-        return $this->responseFactory->buildOKResponseWithMessage("Employee: $id was updated");
+        return $this->responseFactory->buildOKResponseWithMessage("Student: $id was updated");
     }
 
     public function delete(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
-        $result = $this->personeelService->delete($id);
+        $result = $this->studentService->delete($id);
 
         if (!$result) {
-            return $this->responseFactory->buildErrorResponse("Employee: $id was not deleted");
+            return $this->responseFactory->buildErrorResponse("Student: $id was not deleted");
         }
 
-        return $this->responseFactory->buildOKResponseWithMessage("Employee: $id was deleted");
+        return $this->responseFactory->buildOKResponseWithMessage("Student: $id was deleted");
     }
 }

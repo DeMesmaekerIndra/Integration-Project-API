@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Service\OlaService;
 use App\Service\OpoService;
 use App\Service\PersoneelService;
+use App\Service\StudentService;
 use Pimple\Container;
 use Pimple\Psr11\Container as Psr11Container;
 
@@ -18,4 +19,8 @@ $container['OlaService'] = static function (Container $c): OlaService {
 
 $container['PersoneelService'] = static function (Container $c): PersoneelService {
     return new PersoneelService(new Psr11Container($c));
+};
+
+$container['StudentService'] = static function (Container $c): StudentService {
+    return new StudentService(new Psr11Container($c));
 };
