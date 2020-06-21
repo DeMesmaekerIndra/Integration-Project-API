@@ -1,13 +1,14 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
 abstract class BaseController
 {
     public function __construct()
-    {}
+    {
+    }
 
     protected function findQsParamValue($params, $requiredParam)
     {

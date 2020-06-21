@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -113,7 +113,7 @@ final class OlaController extends BaseController
 
     public function delete(Request $request, Response $response, $args): Response
     {
-        $id = args['id'];
+        $id = $args['id'];
         $result = $this->olaService->delete($id);
 
         if (!$result) {

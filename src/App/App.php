@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 use Pimple\Container as PimpleContainer;
 use Pimple\Psr11\Container as Psr11Container;
