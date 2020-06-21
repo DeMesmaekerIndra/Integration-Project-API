@@ -48,6 +48,17 @@ final class OpoService
         return $opos;
     }
 
+    public function getConditionels($id): ?iterable
+    {
+        $opos = $this->opoRepository->getConditionals($id);
+
+        if (!$opos) {
+            return null;
+        }
+
+        return $opos;
+    }
+
     public function create($body): int
     {
         $id = $this->opoRepository->create($body);
@@ -98,6 +109,12 @@ final class OpoService
     public function addConditionalOpo($opoId, $body): bool
     {
         $isSucces = $this->opoRepository->addConditionalOpo($opoId, $body);
+        return $isSucces;
+    }
+
+    public function removeConditionalOpo($opoId, $body): bool
+    {
+        $isSucces = $this->opoRepository->removeConditionalOpo($opoId, $body);
         return $isSucces;
     }
 }

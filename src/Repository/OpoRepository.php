@@ -39,6 +39,14 @@ final class OpoRepository
         return $stmt->fetchAll();
     }
 
+    public function getConditionals($id)
+    {
+        $stmt = $this->connection->prepare("SELECT Voorwaarde_OPO_Id FROM volgtijdelijkheden WHERE OPO_Id = :OPO_Id");
+        $stmt->bindParam(':OPO_Id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function create($body)
     {
         $stmt = $this->connection->prepare("INSERT INTO opos (Code, Naam, Studiepunten, IsActief, Jaarduur, Fase_FK ) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur, :Fase_FK)");
@@ -115,6 +123,24 @@ final class OpoRepository
 
         foreach ($body['ConditionalIds'] as &$conditionalId) {
             $stmt = $this->connection->prepare("INSERT INTO `volgtijdelijkheden` (OPO_Id, Voorwaarde_OPO_Id) VALUES (:OPO_Id, :Voorwaarde_OPO_Id)");
+            $stmt->bindParam(':OPO_Id', $opoId, PDO::PARAM_INT);
+            $stmt->bindParam(':Voorwaarde_OPO_Id', $conditionalId, PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                $this->connection->rollback();
+                return false;
+            }
+        }
+
+        $this->connection->commit();
+        return true;
+    }
+
+    public function removeConditionalOpo($opoId, $body)
+    {
+        $this->connection->beginTransaction();
+
+        foreach ($body['ConditionalIds'] as &$conditionalId) {
+            $stmt = $this->connection->prepare("DELETE FROM `volgtijdelijkheden` WHERE OPO_Id = :OPO_Id AND Voorwaarde_OPO_Id = :Voorwaarde_OPO_Id");
             $stmt->bindParam(':OPO_Id', $opoId, PDO::PARAM_INT);
             $stmt->bindParam(':Voorwaarde_OPO_Id', $conditionalId, PDO::PARAM_STR);
             if (!$stmt->execute()) {

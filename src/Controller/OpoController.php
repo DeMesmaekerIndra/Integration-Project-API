@@ -38,6 +38,10 @@ final class OpoController extends BaseController
             $result['Coordinator'] = $this->personeelService->getByOpo($id);
         }
 
+        if ($this->findQsParamValue($qsParams, 'v') === 'true') {
+            $result['Conditionals'] = $this->opoService->getConditionels($id);
+        }
+
         if (!$result) {
             return $this->responseFactory->buildErrorResponse("Could not find OPO with id: $id");
         }
@@ -183,7 +187,7 @@ final class OpoController extends BaseController
         $opoId = $args['id'];
         $body = $request->getParsedBody();
 
-        $result = $this->opoService->addConditionalOpo($opoId, $body);
+        $result = $this->opoService->removeConditionalOpo($opoId, $body);
 
         if (!$result) {
             return $this->responseFactory->buildErrorResponse("Could not unlink the conditional OPO(s) to OPO: $opoId");
