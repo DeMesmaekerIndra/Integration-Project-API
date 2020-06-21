@@ -33,7 +33,7 @@ final class StudentRepository
 
     public function create($body)
     {
-        $stmt = $this->connection->prepare("INSERT INTO studenten (Student_NR, Voornaam, Achternaam, Email , GSM, `Contract`, Traject, Afstudeerbaar, Soort, Inschrijvingsjaar) VALUES (:Student_NR,:Voornaam, :Achternaam, :Email, :GSM, , :Contract, :Traject, :Afstudeerbaar, :Soort, :Inschrijvingsjaar)");
+        $stmt = $this->connection->prepare("INSERT INTO studenten (Student_NR, Voornaam, Achternaam, Email, GSM, `Contract`, Traject, Afstudeerbaar, Soort, Inschrijvingsjaar) VALUES (:Student_NR,:Voornaam, :Achternaam, :Email, :GSM, :Contract, :Traject, :Afstudeerbaar, :Soort, :Inschrijvingsjaar)");
         $stmt->bindParam(':Student_NR', $body['Student_NR'], PDO::PARAM_STR);
         $stmt->bindParam(':Voornaam', $body['Voornaam'], PDO::PARAM_STR);
         $stmt->bindParam(':Achternaam', $body['Achternaam'], PDO::PARAM_STR);
@@ -50,7 +50,7 @@ final class StudentRepository
 
     public function update($id, $body)
     {
-        $stmt = $this->connection->prepare("UPDATE studenten SET Voornaam=:Voornaam, Achternaam=:Achternaam, Email=:Email, GSM=:GSM, `Contract`=:Contract:, Traject=:Traject, Afstudeerbaar=:Afstudeerbaar, Soort=:Soort, Inschrijvingsjaar=:Inschrijvingsjaar WHERE Student_NR=:Student_NR");
+        $stmt = $this->connection->prepare("UPDATE studenten SET Voornaam=:Voornaam, Achternaam=:Achternaam, Email=:Email, GSM=:GSM, `Contract`=:Contract, Traject=:Traject, Afstudeerbaar=:Afstudeerbaar, Soort=:Soort, Inschrijvingsjaar=:Inschrijvingsjaar WHERE Student_NR=:Student_NR");
         $stmt->bindParam(':Student_NR', $id, PDO::PARAM_STR);
         $stmt->bindParam(':Voornaam', $body['Voornaam'], PDO::PARAM_STR);
         $stmt->bindParam(':Achternaam', $body['Achternaam'], PDO::PARAM_STR);
