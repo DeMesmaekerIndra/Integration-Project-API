@@ -25,13 +25,13 @@ class ValidateRequestMiddleware implements MiddlewareInterface
         $response = new Response();
 
         if (!$postData) {
-            $response->getBody()->write('No data! Check your request data.');
+            $response->getBody()->write(json_encode(['message' => 'No data! Check your request data.']));
             return $response->withStatus(400);
         }
 
         foreach ($this->requiredKeys as $key) {
             if (!isset($postData[$key])) {
-                $response->getBody()->write('Not enough data! Check your request data.');
+                $response->getBody()->write(json_encode(['message' => 'Not enough data! Check your request data.']));
                 return $response->withStatus(400);
             }
         }

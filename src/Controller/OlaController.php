@@ -48,7 +48,6 @@ final class OlaController extends BaseController
     {
         $qsParams = $request->getQueryParams();
         $result = $this->olaService->getAll();
-        $return = ['data' => []];
 
         if ($this->findQsParamValue($qsParams, 'o') === 'true') {
             for ($i = 0; $i < count($result); $i++) {
@@ -145,6 +144,7 @@ final class OlaController extends BaseController
         if (!$result) {
             return $this->responseFactory->buildErrorResponse("Could not remove docent: $docentId from OLA: $olaId");
         }
+
         return $this->responseFactory->buildOKResponseWithMessage("Docent: $docentId linked to OLA: $olaId");
     }
 }

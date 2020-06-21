@@ -52,7 +52,6 @@ final class OpoController extends BaseController
     public function getAll(Request $request, Response $response, $args): Response
     {
         $qsParams = $request->getQueryParams();
-        $return = ['data' => []];
 
         $result = $this->opoService->getAll();
 

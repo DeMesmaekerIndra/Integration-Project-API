@@ -56,25 +56,4 @@ final class ResponseFactory
         $response->withStatus(400);
         return $response;
     }
-
-    public function buildNotFoundResponse(): Response
-    {
-        $response = new Response();
-        $body = ['Message' => 'The endpoint you are trying to access does not exist. Double check URI & HTTP Method'];
-
-        $response->getBody()->write(json_encode($body));
-        $response->withProtocolVersion('2.0');
-        $response->withStatus(404);
-        return $response;
-    }
-
-    public function buildNotAllowedResponse(): Response
-    {
-        $response = new Response();
-        $body = ['Message' => 'You are not authorized to access to access this endpoint or data!'];
-        $response->getBody()->write(json_encode($body));
-        $response->withProtocolVersion('2.0');
-        $response->withStatus(405);
-        return $response;
-    }
 }
