@@ -95,15 +95,15 @@ final class StudentController extends BaseController
     public function registerInOpo(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
-        $opoId = $args['opoid'];
         $body = $request->getParsedBody();
-        $result = $this->studentService->registerInOpo($id, $opoId, $body);
+        $opoId = $body['OPO_Id_FK'];
+        $result = $this->studentService->registerInOpo($id, $body);
 
         if (!$result) {
             return $this->responseFactory->buildErrorResponse("Student: $id was not registered to OPO: $opoId");
         }
 
-        return $this->responseFactory->buildOKResponseWithMessage("Student: $id was registeed to OPO: $opoId");
+        return $this->responseFactory->buildOKResponseWithMessage("Student: $id was registered to OPO: $opoId");
     }
 
     public function unregisterFromOpo(Request $request, Response $response, $args): Response

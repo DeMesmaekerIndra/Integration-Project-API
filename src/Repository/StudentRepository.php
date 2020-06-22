@@ -72,13 +72,13 @@ final class StudentRepository
         return $stmt->execute();
     }
 
-    public function registerInOpo($id, $opoId, $body)
+    public function registerInOpo($id, $body)
     {
         $this->connection->beginTransaction();
 
         $stmt = $this->connection->prepare("INSERT INTO inschrijvingen (Student_Nr_FK, OPO_Id_FK, `Status`, Jaar) VALUES (:Student_Nr_FK, :OPO_Id_FK, :Status, :Jaar)");
         $stmt->bindParam(':Student_Nr_FK', $id, PDO::PARAM_STR);
-        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+        $stmt->bindParam(':OPO_Id_FK', $body['OPO_Id_FK'], PDO::PARAM_INT);
         $stmt->bindParam(':Status', $body['Status'], PDO::PARAM_STR);
         $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_STR);
 

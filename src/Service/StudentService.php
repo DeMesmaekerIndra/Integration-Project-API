@@ -53,9 +53,9 @@ final class StudentService
         return $isSuccess;
     }
 
-    public function registerInOpo($id, $opoId, $body): bool
+    public function registerInOpo($id, $body): bool
     {
-        $isSuccess = $this->studentRepository->registerInOpo($id, $opoId, $body);
+        $isSuccess = $this->studentRepository->registerInOpo($id, $body);
         return $isSuccess;
     }
 

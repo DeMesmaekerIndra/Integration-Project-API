@@ -75,8 +75,12 @@ $app->group('/student', function (RouteCollectorProxy $studentGroup) {
         $studentIdGroup->put('', 'App\Controller\StudentController:update') // Update a student
             ->add(new ValidateRequestMiddleware(['Voornaam', 'Achternaam', 'Email', 'GSM', 'Contract', 'Traject', 'Afstudeerbaar', 'Soort', 'Inschrijvingsjaar']));
 
-        $studentIdGroup->post('/opo/{opoid:[0-9]+}', 'App\Controller\StudentController:registerInOpo') //Register a student with an OPO
-            ->add(new ValidateRequestMiddleware(['Status', 'Jaar']));;
+        $studentIdGroup->post('/opo', 'App\Controller\StudentController:registerInOpo') //Register a student with an OPO
+            ->add(new ValidateRequestMiddleware(['OPO_Id_FK', 'Status', 'Jaar']));;
+
+
+
+
         $studentIdGroup->delete('/opo/{opoid:[0-9]+}', 'App\Controller\StudentController:unregisterFromOpo') //De-register a student from an OPO
             ->add(new ValidateRequestMiddleware(['Jaar']));
     });
