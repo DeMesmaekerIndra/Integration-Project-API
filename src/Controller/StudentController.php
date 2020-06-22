@@ -78,4 +78,18 @@ final class StudentController extends BaseController
 
         return $this->responseFactory->buildOKResponseWithMessage("Student: $id was deleted");
     }
+
+    public function registerInOpo(Request $request, Response $response, $args): Response
+    {
+        $id = $args['id'];
+        $opoId = $args['opoid'];
+        $body = $request->getParsedBody();
+        $result = $this->studentService->registerInOpo($id, $opoId, $body);
+
+        if (!$result) {
+            return $this->responseFactory->buildErrorResponse("Student: $id was not registered to OPO: $opoId");
+        }
+
+        return $this->responseFactory->buildOKResponseWithMessage("Student: $id was registeed to OPO: $opoId");
+    }
 }

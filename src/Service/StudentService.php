@@ -52,4 +52,10 @@ final class StudentService
         $isSuccess = $this->studentRepository->delete($id);
         return $isSuccess;
     }
+
+    public function registerInOpo($id, $opoId, $body): bool
+    {
+        $isSuccess = $this->studentRepository->registerInOpo($id, $opoId, $body);
+        return $isSuccess;
+    }
 }

@@ -43,7 +43,7 @@ final class App
 
         //How are errors displayed
         $displayError = filter_var($_SERVER['DISPLAY_ERROR_DETAILS'], FILTER_VALIDATE_BOOLEAN);
-        $errorMiddleware = $app->addErrorMiddleware($displayError, true, true);
+        $errorMiddleware = $app->addErrorMiddleware(true, true, true);
         $errorMiddleware->getDefaultErrorHandler()->forceContentType('application/json');
 
         //Set up middleware to define headers

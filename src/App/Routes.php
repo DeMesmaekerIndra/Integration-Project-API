@@ -65,14 +65,18 @@ $app->group('/personeel', function (RouteCollectorProxy $personeelGroup) {
 });
 
 $app->group('/student', function (RouteCollectorProxy $studentGroup) {
-    $studentGroup->get('', 'App\Controller\StudentController:getAll'); //Get all OPO's
-    $studentGroup->post('', 'App\Controller\StudentController:create') //Create new OPO
+    $studentGroup->get('', 'App\Controller\StudentController:getAll'); //Get all students
+    $studentGroup->post('', 'App\Controller\StudentController:create') //Add new student
         ->add(new ValidateRequestMiddleware(['Student_NR', 'Voornaam', 'Achternaam', 'Email', 'GSM', 'Contract', 'Traject', 'Afstudeerbaar', 'Soort', 'Inschrijvingsjaar']));
 
     $studentGroup->group('/{id}', function (RouteCollectorproxy $studentIdGroup) {
-        $studentIdGroup->get('', 'App\Controller\StudentController:get'); // Get an OPO
-        $studentIdGroup->delete('', 'App\Controller\StudentController:delete'); //Delete an OPO
-        $studentIdGroup->put('', 'App\Controller\StudentController:update') // Update an OPO
+        $studentIdGroup->get('', 'App\Controller\StudentController:get'); // Get a student
+        $studentIdGroup->delete('', 'App\Controller\StudentController:delete'); //Delete a student
+        $studentIdGroup->put('', 'App\Controller\StudentController:update') // Update a student
             ->add(new ValidateRequestMiddleware(['Voornaam', 'Achternaam', 'Email', 'GSM', 'Contract', 'Traject', 'Afstudeerbaar', 'Soort', 'Inschrijvingsjaar']));
+
+        $studentIdGroup->put('/opo/{opoid:[0-9]+}', 'App\Controller\StudentController:registerInOpo') //Register a student with an OPO
+            ->add(new ValidateRequestMiddleware(['Status', 'Jaar']));;
+        //$studentIdGroup->delete('/opo/{id:[0-9]+}', 'App\Controller\StudentController:unregisterFromOpo'); //De-register a student from an OPO
     });
 });

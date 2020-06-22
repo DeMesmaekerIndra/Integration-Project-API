@@ -71,4 +71,37 @@ final class StudentRepository
         $stmt->bindParam(':Student_NR', $id, PDO::PARAM_STR);
         return $stmt->execute();
     }
+
+    public function registerInOpo($id, $opoId, $body)
+    {
+        $this->connection->beginTransaction();
+
+        $stmt = $this->connection->prepare("INSERT INTO inschrijvingen (Student_Nr_FK, OPO_Id_FK, `Status`, Jaar) VALUES (:Student_Nr_FK, :OPO_Id_FK, :Status, :Jaar)");
+        $stmt->bindParam(':Student_Nr_FK', $id, PDO::PARAM_STR);
+        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+        $stmt->bindParam(':Status', $body['Status'], PDO::PARAM_STR);
+        $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_STR);
+
+        if (!$stmt->execute()) {
+            $this->connection->rollback();
+            return false;
+        }
+
+        $inschrijvingsId = $this->connection->lastInsertId();
+
+        if (array_key_exists('Deelvrijstellingen', $body)) {
+            foreach ($body['Deelvrijstellingen'] as &$OlaId) {
+                $stmt = $this->connection->prepare("INSERT INTO `Deelvrijstellingen` (Inschrijvingen_Id_FK, OLA_Id_FK) VALUES (:Inschrijvingen_Id_FK, :OLA_Id_FK)");
+                $stmt->bindParam(':Inschrijvingen_Id_FK', $inschrijvingsId, PDO::PARAM_INT);
+                $stmt->bindParam(':OLA_Id_FK', $OlaId, PDO::PARAM_INT);
+                if (!$stmt->execute()) {
+                    $this->connection->rollback();
+                    return false;
+                }
+            }
+        }
+
+        $this->connection->commit();
+        return true;
+    }
 }
