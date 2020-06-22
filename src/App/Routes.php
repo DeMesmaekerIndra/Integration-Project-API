@@ -78,10 +78,16 @@ $app->group('/student', function (RouteCollectorProxy $studentGroup) {
         $studentIdGroup->post('/opo', 'App\Controller\StudentController:registerInOpo') //Register a student with an OPO
             ->add(new ValidateRequestMiddleware(['OPO_Id_FK', 'Status', 'Jaar']));;
 
-        $studentIdGroup->put('/opo/{opoid:[0-9]+}', 'App\Controller\StudentController:updateRegistration') //Register a student with an OPO
+        $studentIdGroup->put('/opo/{opoid:[0-9]+}', 'App\Controller\StudentController:updateRegistration') //Update student registration
             ->add(new ValidateRequestMiddleware(['Status', 'Jaar']));
 
         $studentIdGroup->delete('/opo/{opoid:[0-9]+}', 'App\Controller\StudentController:unregisterFromOpo') //De-register a student from an OPO
             ->add(new ValidateRequestMiddleware(['Jaar']));
+
+        $studentIdGroup->post('/opo/{opoid:[0-9]+}/vrijstelling', 'App\Controller\StudentController:addExemption') //Add exemption to registration
+            ->add(new ValidateRequestMiddleware(['OLA_Id_FK', 'Jaar']));
+
+        //$studentIdGroup->delete('opo/{opoid:[0-9]+}/vrijstelling/ola/{olaid:[0-9]+}', 'App\Controller\StudentController:removeExemption') //Remove exemption from registration
+        //    ->add(new ValidateRequestMiddleware(['Jaar']));
     });
 });

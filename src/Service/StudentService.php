@@ -70,4 +70,9 @@ final class StudentService
         $isSuccess = $this->studentRepository->unregisterFromOpo($id, $opoId, $body);
         return $isSuccess;
     }
+    public function addExemption($id, $opoId, $body): bool
+    {
+        $isSuccess = $this->studentRepository->addExemption($id, $opoId, $body);
+        return $isSuccess;
+    }
 }

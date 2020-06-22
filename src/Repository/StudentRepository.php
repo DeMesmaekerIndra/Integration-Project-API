@@ -133,4 +133,34 @@ final class StudentRepository
         $stmt->execute();
         return $stmt->fetch();
     }
+
+    public function addExemption($id, $opoId, $body)
+    {
+        $this->connection->beginTransaction();
+
+        $stmt = $this->connection->prepare("SELECT Id FROM inschrijvingen WHERE Jaar = :Jaar AND Student_Nr_FK = :Student_Nr_FK AND OPO_Id_FK = :OPO_Id_FK");
+        $stmt->bindParam(':Student_Nr_FK', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_STR);
+        $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_STR);
+        $stmt->execute();
+        $registrationId = $stmt->fetch();
+
+        if (!$registrationId) {
+            return false;
+        }
+
+        foreach ($body['OLA_Id_FK'] as &$olaId) {
+            $stmt = $this->connection->prepare("INSERT INTO Deelvrijstellingen (Inschrijvingen_Id_FK, OLA_Id_FK) VALUES (:Inschrijvingen_Id_FK, :OLA_Id_FK)");
+            $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
+            $stmt->bindParam(':Inschrijvingen_Id_FK', $registrationId['Id'], PDO::PARAM_STR);
+
+            if (!$stmt->execute()) {
+                $this->connection->rollback();
+                return false;
+            }
+        }
+
+        $this->connection->commit();
+        return true;
+    }
 }

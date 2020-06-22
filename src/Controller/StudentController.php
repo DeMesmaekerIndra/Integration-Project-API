@@ -133,4 +133,18 @@ final class StudentController extends BaseController
 
         return $this->responseFactory->buildOKResponseWithMessage("Student: $id was unregistered from OPO: $opoId");
     }
+
+    public function addExemption(Request $request, Response $response, $args): Response
+    {
+        $id = $args['id'];
+        $opoId = $args['opoid'];
+        $body = $request->getParsedBody();
+        $result = $this->studentService->addExemption($id, $opoId, $body);
+
+        if (!$result) {
+            return $this->responseFactory->buildErrorResponse("Exemption could not be added to student: $id");
+        }
+
+        return $this->responseFactory->buildOKResponseWithMessage("Exemption was added to student: $id ");
+    }
 }
