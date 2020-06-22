@@ -57,11 +57,12 @@ final class OpoRepository
 
     public function create($body)
     {
-        $stmt = $this->connection->prepare("INSERT INTO opos (Code, Naam, Studiepunten, IsActief, Jaarduur, Fase_FK ) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur, :Fase_FK)");
+        $stmt = $this->connection->prepare("INSERT INTO opos (Code, Naam, Studiepunten, IsActief, Jaarduur, Jaar, Fase_FK ) VALUES (:Code, :Naam, :Studiepunten, :IsActief,:Jaarduur, :Jaar, :Fase_FK)");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
         $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
+        $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
         $stmt->bindParam(':Fase_FK', $body['Fase_FK'], PDO::PARAM_INT);
         if (!$stmt->execute()) {
@@ -73,11 +74,12 @@ final class OpoRepository
 
     public function update($body, $id)
     {
-        $stmt = $this->connection->prepare("UPDATE opos SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur, Fase_FK=:Fase_FK WHERE Id=:Id");
+        $stmt = $this->connection->prepare("UPDATE opos SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur, Jaar=:Jaar, Fase_FK=:Fase_FK WHERE Id=:Id");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
         $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
+        $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
         $stmt->bindParam(':Fase_FK', $body['Fase_FK'], PDO::PARAM_INT);
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);

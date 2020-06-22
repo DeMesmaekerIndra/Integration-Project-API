@@ -124,4 +124,8 @@ final class StudentRepository
         $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_STR);
         return $stmt->execute();
     }
+
+    public function getRegistrationStatus($id, $opoId)
+    {
+    }
 }

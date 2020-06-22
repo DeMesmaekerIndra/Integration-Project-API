@@ -9,10 +9,12 @@ use Psr\Container\ContainerInterface;
 final class OpoService
 {
     private $opoRepository;
+    private $studentRepository;
 
     public function __construct(ContainerInterface $container)
     {
         $this->opoRepository = $container->get('OpoRepository');
+        $this->studentRepository = $container->get('StudentRepository');
     }
 
     public function get($id): ?iterable

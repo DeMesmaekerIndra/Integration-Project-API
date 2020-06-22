@@ -52,11 +52,12 @@ final class OlaRepository
 
     public function create($body)
     {
-        $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
+        $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief, Jaar, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaar, :Jaarduur)");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
         $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
+        $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
 
         if (!$stmt->execute()) {
@@ -71,11 +72,12 @@ final class OlaRepository
     public function createUnderOpo($body, $opoId)
     {
         $this->connection->beginTransaction();
-        $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");
+        $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief,Jaar, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaar, :Jaarduur)");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
         $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
+        $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
 
         if (!$stmt->execute()) {
@@ -99,11 +101,12 @@ final class OlaRepository
 
     public function update($body, $id)
     {
-        $stmt = $this->connection->prepare("UPDATE olas SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaarduur=:Jaarduur WHERE Id=:Id");
+        $stmt = $this->connection->prepare("UPDATE olas SET Code=:Code, Naam=:Naam, Studiepunten=:Studiepunten, IsActief=:IsActief, Jaar=:Jaar, Jaarduur=:Jaarduur WHERE Id=:Id");
         $stmt->bindParam(':Code', $body['Code'], PDO::PARAM_STR);
         $stmt->bindParam(':Naam', $body['Naam'], PDO::PARAM_STR);
         $stmt->bindParam(':Studiepunten', $body['Studiepunten'], PDO::PARAM_INT);
         $stmt->bindParam(':IsActief', $body['IsActief'], PDO::PARAM_INT);
+        $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_INT);
         $stmt->bindParam(':Jaarduur', $body['Jaarduur'], PDO::PARAM_STR);
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
 
