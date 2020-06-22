@@ -6,7 +6,6 @@ use App\Service\OlaService;
 use App\Service\OpoService;
 use App\Service\PersoneelService;
 use App\Service\StudentService;
-use App\Service\InschrijvingsService;
 use Pimple\Container;
 use Pimple\Psr11\Container as Psr11Container;
 
@@ -24,8 +23,4 @@ $container['PersoneelService'] = static function (Container $c): PersoneelServic
 
 $container['StudentService'] = static function (Container $c): StudentService {
     return new StudentService(new Psr11Container($c));
-};
-
-$container['InschrijvingsService'] = static function (Container $c): InschrijvingsService {
-    return new InschrijvingsService(new Psr11Container($c));
 };
