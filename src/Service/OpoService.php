@@ -69,6 +69,10 @@ final class OpoService
             return null;
         }
 
+        foreach ($opos as $key => $value) {
+            $opos[$key]['InschrijvingsInformatie'] = $this->studentRepository->getRegistration($id, $value['Id']);
+        }
+
         return $opos;
     }
 

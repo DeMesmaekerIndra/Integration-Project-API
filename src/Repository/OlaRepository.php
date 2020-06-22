@@ -41,7 +41,7 @@ final class OlaRepository
 
     public function getExemptions($id)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM olas AS o
+        $stmt = $this->connection->prepare("SELECT o.Id, Code, Naam, Studiepunten, isActief, jaarduur, o.Jaar FROM olas AS o
             INNER JOIN Deelvrijstellingen AS d ON o.Id = d.OLA_Id_FK
             INNER JOIN inschrijvingen AS i ON i.Id = d.Inschrijvingen_Id_FK
             WHERE i.Student_Nr_FK = :Student_Nr_FK");

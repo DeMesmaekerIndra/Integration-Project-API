@@ -125,7 +125,12 @@ final class StudentRepository
         return $stmt->execute();
     }
 
-    public function getRegistrationStatus($id, $opoId)
+    public function getRegistration($id, $opoId)
     {
+        $stmt = $this->connection->prepare("SELECT `Status`, Jaar FROM inschrijvingen WHERE Student_Nr_FK = :Student_Nr_FK AND OPO_ID_FK = :OPO_ID_FK");
+        $stmt->bindParam(':Student_Nr_FK', $id, PDO::PARAM_STR);
+        $stmt->bindParam(':OPO_ID_FK', $opoId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch();
     }
 }
