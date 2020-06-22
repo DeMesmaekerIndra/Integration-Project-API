@@ -39,6 +39,17 @@ final class OlaRepository
         return $stmt->fetchAll();
     }
 
+    public function getExemptions($id)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM olas AS o
+            INNER JOIN Deelvrijstellingen AS d ON o.Id = d.OLA_Id_FK
+            INNER JOIN inschrijvingen AS i ON i.Id = d.Inschrijvingen_Id_FK
+            WHERE i.Student_Nr_FK = :Student_Nr_FK");
+        $stmt->bindParam(':Student_Nr_FK', $id, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function create($body)
     {
         $stmt = $this->connection->prepare("INSERT INTO olas (Code, Naam, Studiepunten, IsActief, Jaarduur) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur)");

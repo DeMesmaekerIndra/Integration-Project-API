@@ -11,18 +11,31 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class StudentController extends BaseController
 {
     private $studentService;
+    private $opoService;
+    private $olaService;
     private $responseFactory;
 
     public function __construct(ContainerInterface $container)
     {
         $this->studentService = $container->get('StudentService');
+        $this->opoService = $container->get('OpoService');
+        $this->olaService = $container->get('OlaService');
         $this->responseFactory = $container->get('ResponseFactory');
     }
 
     public function get(Request $request, Response $response, $args): Response
     {
         $id = $args['id'];
+        $qsParams = $request->getQueryParams();
         $result = $this->studentService->get($id);
+
+        if ($this->findQsParamValue($qsParams, 'o') === 'true') {
+            $result['OPOs'] = $this->opoService->getByStudent($id);
+        }
+
+        if ($this->findQsParamValue($qsParams, 'e') === 'true') {
+            $result['Exemptions'] = $this->olaService->getExemptions($id);
+        }
 
         if (!$result) {
             return $this->responseFactory->buildErrorResponse("Could not find student with id: $id");
@@ -101,9 +114,9 @@ final class StudentController extends BaseController
         $result = $this->studentService->unregisterFromOpo($id, $opoId, $body);
 
         if (!$result) {
-            return $this->responseFactory->buildErrorResponse("Student: $id was not unregistered to OPO: $opoId");
+            return $this->responseFactory->buildErrorResponse("Student: $id was not unregistered from OPO: $opoId");
         }
 
-        return $this->responseFactory->buildOKResponseWithMessage("Student: $id was unregisteed to OPO: $opoId");
+        return $this->responseFactory->buildOKResponseWithMessage("Student: $id was unregistered from OPO: $opoId");
     }
 }

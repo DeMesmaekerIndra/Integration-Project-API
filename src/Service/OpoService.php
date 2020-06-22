@@ -59,6 +59,17 @@ final class OpoService
         return $opos;
     }
 
+    public function getByStudent($id): ?iterable
+    {
+        $opos = $this->opoRepository->getByStudent($id);
+
+        if (!$opos) {
+            return null;
+        }
+
+        return $opos;
+    }
+
     public function create($body): int
     {
         $id = $this->opoRepository->create($body);

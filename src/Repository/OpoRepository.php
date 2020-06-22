@@ -47,6 +47,14 @@ final class OpoRepository
         return $stmt->fetchAll();
     }
 
+    public function getByStudent($id)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM opos WHERE Id IN (SELECT OPO_Id_FK FROM inschrijvingen WHERE Student_Nr_FK = :Student_Nr_FK)");
+        $stmt->bindParam(':Student_Nr_FK', $id, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function create($body)
     {
         $stmt = $this->connection->prepare("INSERT INTO opos (Code, Naam, Studiepunten, IsActief, Jaarduur, Fase_FK ) VALUES (:Code, :Naam, :Studiepunten, :IsActief, :Jaarduur, :Fase_FK)");

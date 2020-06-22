@@ -48,6 +48,17 @@ final class OlaService
         return $olas;
     }
 
+    public function getExemptions($id): ?iterable
+    {
+        $olas = $this->olaRepository->getExemptions($id);
+
+        if (!$olas) {
+            return null;
+        }
+
+        return $olas;
+    }
+
     public function create($body): int
     {
         $id = $this->olaRepository->create($body);
