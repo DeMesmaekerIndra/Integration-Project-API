@@ -58,4 +58,10 @@ final class StudentService
         $isSuccess = $this->studentRepository->registerInOpo($id, $opoId, $body);
         return $isSuccess;
     }
+
+    public function unregisterFromOpo($id, $opoId, $body): bool
+    {
+        $isSuccess = $this->studentRepository->unregisterFromOpo($id, $opoId, $body);
+        return $isSuccess;
+    }
 }

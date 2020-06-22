@@ -92,4 +92,18 @@ final class StudentController extends BaseController
 
         return $this->responseFactory->buildOKResponseWithMessage("Student: $id was registeed to OPO: $opoId");
     }
+
+    public function unregisterFromOpo(Request $request, Response $response, $args): Response
+    {
+        $id = $args['id'];
+        $opoId = $args['opoid'];
+        $body = $request->getParsedBody();
+        $result = $this->studentService->unregisterFromOpo($id, $opoId, $body);
+
+        if (!$result) {
+            return $this->responseFactory->buildErrorResponse("Student: $id was not unregistered to OPO: $opoId");
+        }
+
+        return $this->responseFactory->buildOKResponseWithMessage("Student: $id was unregisteed to OPO: $opoId");
+    }
 }
