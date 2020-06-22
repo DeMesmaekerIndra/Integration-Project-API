@@ -147,4 +147,18 @@ final class StudentController extends BaseController
 
         return $this->responseFactory->buildOKResponseWithMessage("Exemption was added to student: $id ");
     }
+
+    public function removeExemption(Request $request, Response $response, $args): Response
+    {
+        $id = $args['id'];
+        $opoId = $args['opoid'];
+        $body = $request->getParsedBody();
+        $result = $this->studentService->removeExemption($id, $opoId, $body);
+
+        if (!$result) {
+            return $this->responseFactory->buildErrorResponse("Exemption could not be removed from student: $id");
+        }
+
+        return $this->responseFactory->buildOKResponseWithMessage("Exemption was removed from student: $id ");
+    }
 }
