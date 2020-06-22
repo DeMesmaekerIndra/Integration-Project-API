@@ -105,6 +105,17 @@ final class StudentRepository
         return true;
     }
 
+    public function updateRegistration($id, $opoId, $body)
+    {
+        $stmt = $this->connection->prepare("UPDATE inschrijvingen SET `Status`= :Status WHERE OPO_Id_FK =:OPO_Id_FK AND Student_Nr_FK =:Student_Nr_FK AND Jaar =:Jaar");
+        $stmt->bindParam(':Student_Nr_FK', $id, PDO::PARAM_STR);
+        $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+        $stmt->bindParam(':Status', $body['Status'], PDO::PARAM_STR);
+        $stmt->bindParam(':Jaar', $body['Jaar'], PDO::PARAM_STR);
+
+        return $stmt->execute();
+    }
+
     public function unregisterFromOpo($id, $opoId, $body)
     {
         $stmt = $this->connection->prepare("DELETE FROM `inschrijvingen` WHERE Student_Nr_FK = :Student_Nr_FK AND OPO_Id_FK = :OPO_Id_FK AND Jaar = :Jaar");

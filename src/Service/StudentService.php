@@ -59,6 +59,12 @@ final class StudentService
         return $isSuccess;
     }
 
+    public function updateRegistration($id, $opoId, $body): bool
+    {
+        $isSuccess = $this->studentRepository->updateRegistration($id, $opoId, $body);
+        return $isSuccess;
+    }
+
     public function unregisterFromOpo($id, $opoId, $body): bool
     {
         $isSuccess = $this->studentRepository->unregisterFromOpo($id, $opoId, $body);
