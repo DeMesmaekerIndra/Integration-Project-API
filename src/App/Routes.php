@@ -16,9 +16,7 @@ $app->group('/opo', function (RouteCollectorproxy $opoGroup) {
         $opoIdGroup->put('', 'App\Controller\OpoController:update') // Update an OPO
             ->add(new ValidateRequestMiddleware(['Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaarduur', 'Jaar', 'Fase_FK']));
 
-        $opoIdGroup->put('/coordinator/{coordinatorid}', 'App\Controller\OpoController:addCoordinator') //Add existing Employee to OPO
-            ->add(new ValidateRequestMiddleware(['Toewijzingsdatum']));
-
+        $opoIdGroup->put('/coordinator/{coordinatorid}', 'App\Controller\OpoController:addCoordinator'); //Add existing Employee to OPO
         $opoIdGroup->delete('/coordinator/{coordinatorid}', 'App\Controller\OpoController:removeCoordinator'); //Remove coordinator from OPO
 
         $opoIdGroup->post('/ola', 'App\Controller\OlaController:createUnderOpo') //Create OLA under OPO

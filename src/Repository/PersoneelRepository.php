@@ -33,7 +33,7 @@ final class PersoneelRepository
 
     public function getByOpo($id)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM onderwijs_personeel WHERE Id IN (SELECT Coordinator_Id_FK FROM `opos-onderwijspersoneel` WHERE OPO_Id_FK = :Id)");
+        $stmt = $this->connection->prepare("SELECT OP.Id, GSM, Email, Achternaam FROM onderwijs_personeel AS OP LEFT JOIN `opos-onderwijspersoneel` as OO ON OP.Id = OO.Coordinator_Id_FK WHERE OPO_Id_FK = :Id ORDER BY Toewijzingsdatum DESC LIMIT 1");
         $stmt->bindParam(':Id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch();
