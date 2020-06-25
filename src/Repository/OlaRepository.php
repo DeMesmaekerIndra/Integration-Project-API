@@ -124,11 +124,17 @@ final class OlaRepository
     {
         $this->connection->beginTransaction();
 
+        $stmt = $this->connection->prepare("DELETE FROM `olas-onderwijspersoneel` WHERE OLA_Id_FK = :OLA_Id_FK");
+        $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
+        if (!$stmt->execute()) {
+            $this->connection->rollback();
+            return false;
+        }
+
         foreach ($body['DocentenIds'] as &$docentId) {
-            $stmt = $this->connection->prepare("INSERT INTO `olas-onderwijspersoneel` (OLA_Id_FK, Docent_Id_FK, Toewijzingsdatum) VALUES (:OLA_Id_FK, :Docent_Id_FK, :Toewijzingsdatum)");
+            $stmt = $this->connection->prepare("INSERT INTO `olas-onderwijspersoneel` (OLA_Id_FK, Docent_Id_FK) VALUES (:OLA_Id_FK, :Docent_Id_FK)");
             $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
             $stmt->bindParam(':Docent_Id_FK', $docentId, PDO::PARAM_STR);
-            $stmt->bindParam(':Toewijzingsdatum', $body['Toewijzingsdatum'], PDO::PARAM_STR);
             if (!$stmt->execute()) {
                 $this->connection->rollback();
                 return false;

@@ -21,7 +21,7 @@ $app->group('/opo', function (RouteCollectorproxy $opoGroup) {
 
         $opoIdGroup->post('/ola', 'App\Controller\OlaController:createUnderOpo') //Create OLA under OPO
             ->add(new ValidateRequestMiddleware(['Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaar', 'Jaarduur']));
-        $opoIdGroup->put('/ola/{olaid:[0-9]+}', 'App\Controller\OpoController:addOla'); //Add existing OLA to existing OPO
+        $opoIdGroup->put('/ola', 'App\Controller\OpoController:addOla'); //Add existing OLA to existing OPO
         $opoIdGroup->delete('/ola/{olaid:[0-9]+}', 'App\Controller\OpoController:removeOla'); //remove OLA from OPO
 
         $opoIdGroup->put('/volgtijdelijkheid', 'App\Controller\OpoController:addConditionalOpo')
@@ -43,7 +43,7 @@ $app->group('/ola', function (RouteCollectorProxy $olaGroup) {
         $olaIdGroup->put('', 'App\Controller\OlaController:update') //update an OLA
             ->add(new ValidateRequestMiddleware(['Code', 'Naam', 'Studiepunten', 'IsActief', 'Jaar', 'Jaarduur']));
         $olaIdGroup->put('/docent', 'App\Controller\OlaController:addDocent') //Add existing employees to Ola
-            ->add(new ValidateRequestMiddleware(['DocentenIds', 'Toewijzingsdatum']));
+            ->add(new ValidateRequestMiddleware(['DocentenIds']));
 
         $olaIdGroup->delete('/docent/{docentid}', 'App\Controller\OlaController:removeDocent'); //Remove docent from OLA
     });

@@ -94,12 +94,29 @@ final class OpoRepository
         return $stmt->execute();
     }
 
-    public function addOla($opoId, $olaId)
+    public function addOla($opoId, $body)
     {
-        $stmt = $this->connection->prepare("INSERT INTO `opos-olas` (OPO_Id_FK, OLA_Id_FK) VALUES (:OPO_Id_FK, :OLA_Id_FK)");
+        $this->connection->beginTransaction();
+
+        $stmt = $this->connection->prepare("DELETE FROM `opos-olas` WHERE OPO_Id_FK = :OPO_Id_FK");
         $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
-        $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
-        return $stmt->execute();
+        if (!$stmt->execute()) {
+            $this->connection->rollback();
+            return false;
+        }
+
+        foreach ($body['olaIds'] as &$olaId) {
+            $stmt = $this->connection->prepare("INSERT INTO `opos-olas` (OPO_Id_FK, OLA_Id_FK) VALUES (:OPO_Id_FK, :OLA_Id_FK)");
+            $stmt->bindParam(':OLA_Id_FK', $olaId, PDO::PARAM_INT);
+            $stmt->bindParam(':OPO_Id_FK', $opoId, PDO::PARAM_INT);
+            if (!$stmt->execute()) {
+                $this->connection->rollback();
+                return false;
+            }
+        }
+
+        $this->connection->commit();
+        return true;
     }
 
     public function removeOla($opoId, $olaId)

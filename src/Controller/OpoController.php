@@ -117,14 +117,14 @@ final class OpoController extends BaseController
     public function addOla(Request $request, Response $response, $args): Response
     {
         $opoId = $args['id'];
-        $olaId = $args['olaid'];
-        $result = $this->opoService->addOla($opoId, $olaId);
+        $body = $request->getParsedBody();
+        $result = $this->opoService->addOla($opoId, $body);
 
         if (!$result) {
-            return $this->responseFactory->buildErrorResponse("Could not link OLA: $olaId to OPO: $opoId");
+            return $this->responseFactory->buildErrorResponse("Could not link OLAs to OPO: $opoId");
         }
 
-        return $this->responseFactory->buildOKResponseWithMessage("OLA: $olaId was linked to OPO: $opoId");
+        return $this->responseFactory->buildOKResponseWithMessage("OLAs were linked to OPO: $opoId");
     }
 
     public function removeOla(Request $request, Response $response, $args): Response
