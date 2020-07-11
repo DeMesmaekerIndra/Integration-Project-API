@@ -148,6 +148,13 @@ final class OpoRepository
     {
         $this->connection->beginTransaction();
 
+        $stmt = $this->connection->prepare("DELETE FROM `volgtijdelijkheden` WHERE OPO_Id = :OPO_Id");
+        $stmt->bindParam(':OPO_Id', $opoId, PDO::PARAM_INT);
+        if (!$stmt->execute()) {
+            $this->connection->rollback();
+            return false;
+        }
+
         foreach ($body['ConditionalIds'] as &$conditionalId) {
             $stmt = $this->connection->prepare("INSERT INTO `volgtijdelijkheden` (OPO_Id, Voorwaarde_OPO_Id) VALUES (:OPO_Id, :Voorwaarde_OPO_Id)");
             $stmt->bindParam(':OPO_Id', $opoId, PDO::PARAM_INT);
